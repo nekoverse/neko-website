@@ -1,0 +1,73 @@
+@font-face {
+	font-family: 'Lulo Clean Bold';
+	font-style: normal;
+	font-weight: normal;
+	src: local('Lulo Clean Bold'), url('../fonts/lulo-clean/lulo-clean-bold.ttf');
+}    	
+@font-face { 
+	font-family: 'Avenir Light'; 
+	src: url("../fonts/avenir-light/avenirltstd-light.otf");
+}
+header {
+	background-color: #F9F9F9;
+	font-family: "Impact", sans-serif !important
+}
+body {                
+	color: #000;
+	background: #F9F9F9;
+	font-family: "Avenir Light" !important
+}
+h1, h2, h3, h4 {
+	font-family: "Lulo Clean Bold" !important
+}
+hr {
+	border-top: 1px solid #8c8b8b;
+}
+ul {
+  	list-style-type: none;
+}		
+li {			
+  	padding-left: 1.3em ;
+  	letter-spacing: 2px; 
+	font-size: 20px;
+}
+li:before {
+  	content: "+";
+  	display: inline-block;
+  	margin-left: -2.3em;
+  	width: 1.3em;
+}		
+#buy-button {
+	font-family: "Lulo Clean Bold" !important;
+	font-size: 16px;
+	padding-top: 16px;
+	padding-bottom: 16px;
+}
+.img-max{
+	max-width:100%;
+	max-height:100%
+}
+.fs-extra-large {
+	font-size: 96px;
+}		
+.fs-large {
+	font-size: 48px;
+}
+.fs-normal {
+	letter-spacing: 2px; 
+	font-size: 24px;
+}
+.fs-smaller {
+	letter-spacing: 2px; 
+	font-size: 20px;
+}	
+.center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 19em		
+}	
+.socials {
+	height: 70px; 
+	width: 100%; 
+	display: inline-block;			
+}
