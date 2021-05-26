@@ -42,36 +42,48 @@ const onboarding = new MetaMaskOnboarding();
 // Show/Hide 
 //
 
+function showLoading() {  
+  $('#loading').removeClass('d-none');
+}
+
+function hideLoading() {
+  $('#loading').addClass('d-none'); 
+}
+
 function showBuyButton() {  
   $('#buyNekoBox').removeClass('d-none');
+  hideLoading();
 }
 
 function hideBuyButton() {
-  $('#buyNekoBox').addClass('d-none'); 
+  $('#buyNekoBox').addClass('d-none');   
 }
 
 function showInstallMetaMaskMessage() {  
   $('#installMetamaskBox').removeClass('d-none');
+  hideLoading();
 }
 
 function hideInstallMetaMaskMessage() {
-  $('#installMetamaskBox').addClass('d-none'); 
+  $('#installMetamaskBox').addClass('d-none');     
 }
 
 function showSwitchNetworkMessage() {  
   $('#switchNetworkBox').removeClass('d-none');
+  hideLoading();
 }
 
 function hideHideSwitchNetworkMessage() {
-  $('#switchNetworkBox').addClass('d-none'); 
+  $('#switchNetworkBox').addClass('d-none');   
 }
 
 function showWalletAccountMessage() {  
   $('#connectWalletBox').removeClass('d-none');
+  hideLoading();
 }
 
 function hideWalletAccountMessage() {
-  $('#connectWalletBox').addClass('d-none'); 
+  $('#connectWalletBox').addClass('d-none');   
 }
 
 //
@@ -213,7 +225,7 @@ function initialize() {
       //   .then(accounts => currentAccount = accounts[0])
     } else {
       console.log("Install MetaMask");
-      showInstallMetaMaskMessage();
+      showInstallMetaMaskMessage();      
     }  
   });  
 

@@ -35,30 +35,39 @@
 					</div>
 				</div>
 
-				<div id="buyNekoBox" class="position-relative pt-3 pb-3 d-none">
-					<button id="buy-button" type="button" class="btn btn-primary btn-lg rounded-pill mx-auto d-block">Buy Me</button>								
-					<div class="text-center pt-3">	
-						<a id="add-link" href="" class="fs-smaller">Add me to your wallet for later</a>
-					</div>
-				</div>
-		      	<div id="installMetamaskBox" class="row justify-content-center d-none">
-		       		<div class="alert alert-danger w-50" role="alert">
-		          	Looks like you are new to this all.
-		          	<button class="install btn btn-danger float-right" type="submit">Install MetaMaskt</button>            
-		        	</div>    
-		      	</div>
-		      	<div id="connectWalletBox" class="row justify-content-center d-none">
-		        	<div class="alert alert-danger w-50" role="alert">
-		          	Connect your wallet to buy Nekos.
-		          	<button class="connect btn btn-danger float-right" type="submit">Connect Wallet</button>
-		        	</div>    
-		      	</div>
-		      	<div id="switchNetworkBox" class="row justify-content-center d-none">
-		        	<div class="alert alert-danger w-50" role="alert">
-		          	Nekos live on Avalanche. Switch the network.
-		          	<button class="switch btn btn-danger float-right" type="submit">Switch to Avalanche</button>            
-		        	</div>    
-		      	</div>  
+				<div style="height: 150px">
+			      	<div id="loading" 
+			      		 class="position-relative w-25 mx-auto">
+			      		 <img src="images/loading.gif" class="mx-auto d-block"></img>
+			      	</div>
+					<div id="buyNekoBox" class="position-relative pt-3 pb-3 d-none">
+						<button id="buy-button" type="button" class="btn btn-primary btn-lg rounded-pill mx-auto d-block">Buy Me</button>								
+						<div class="text-center pt-3">	
+							<a id="add-link" href="" class="fs-smaller">Add me to your wallet for later</a>
+						</div>
+					</div>				
+			      	<div id="installMetamaskBox" 
+			      		 class="position-relative d-none alert alert-danger w-25 mx-auto">
+			       		<div class="text-center pb-3" role="alert">
+			       			Install MetaMask to get you started.
+			       		</div>		          	
+			          	<button class="install btn btn-danger mx-auto d-block" type="submit">Install MetaMask</button>		          	
+			      	</div>
+			      	<div id="connectWalletBox" 
+			      		 class="position-relative d-none alert alert-danger w-25 mx-auto">
+			       		<div class="text-center pb-3" role="alert">
+			       			Connect your wallet to get your Nekos.
+			       		</div>	
+			          	<button class="connect btn btn-danger mx-auto d-block" type="submit">Connect Wallet</button>		        	
+			      	</div>
+			      	<div id="switchNetworkBox" 
+			      		 class="position-relative d-none alert alert-danger w-25 mx-auto">
+			        	<div class="text-center pb-3" role="alert">
+			          		Nekos live on Avalanche. Switch the network.
+			          	</div>
+			          	<button class="switch btn btn-danger mx-auto d-block" type="submit">Switch to Avalanche</button>            			        	   
+			      	</div>  
+			    </div>
 
 
 				<div class="position-relative pt-3 pb-3">
