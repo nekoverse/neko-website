@@ -1,0 +1,13 @@
+{
+  "name": "neko-website",
+  "version": "1.0.0",
+  "description": "Neko website",
+  "main": "index.html",
+  "repository": "git@github.com:timeslave1/neko-website.git",
+  "author": "timeslave <timeslave@protonmail.com>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "mime": "^2.5.2"
+  }
+}
