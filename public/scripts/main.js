@@ -1,10 +1,8 @@
 const abi = [
-  "function mint(address buyer, string calldata metadataHash) external payable",
-  "function getCurrentPrice() public view returns (uint256)",
-  "function isValid(string calldata metadata) external view returns (bool)",
+  "function buy() external payable",
 ]
 
-const contractAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
+const shopAddr = "0xa7F7f2fBEC2ebae5AD77Cc0b9A36DF44C88a2eDf";
 
 
 const AVALANCHE_MAINNET_PARAMS = {
@@ -35,6 +33,7 @@ let currentChainId;
 let provider;
 let contract;
 let signer;
+let shop;
 
 const onboarding = new MetaMaskOnboarding();
 
@@ -42,48 +41,50 @@ const onboarding = new MetaMaskOnboarding();
 // Show/Hide 
 //
 
+function showGettingNekos() {  
+  hideAll();
+  $('#buying').removeClass('d-none');
+}
+
 function showLoading() {  
+  hideAll();
   $('#loading').removeClass('d-none');
 }
 
-function hideLoading() {
-  $('#loading').addClass('d-none'); 
-}
-
-function showBuyButton() {  
+function showBuyButton(success) {  
+  hideAll();
   $('#buyNekoBox').removeClass('d-none');
-  hideLoading();
-}
-
-function hideBuyButton() {
-  $('#buyNekoBox').addClass('d-none');   
+  if (success !== undefined) {
+    if (success) {
+      $("#buyNekoBox .btn-group").effect("shake", {direction: "up", distance: 5});
+    } else {
+      $("#buyNekoBox .btn-group").effect("shake", {direction: "left", distance: 5});
+    }
+  }
 }
 
 function showInstallMetaMaskMessage() {  
-  $('#installMetamaskBox').removeClass('d-none');
-  hideLoading();
-}
-
-function hideInstallMetaMaskMessage() {
-  $('#installMetamaskBox').addClass('d-none');     
+  hideAll();
+  $('#installMetamaskBox').removeClass('d-none');  
 }
 
 function showSwitchNetworkMessage() {  
-  $('#switchNetworkBox').removeClass('d-none');
-  hideLoading();
-}
-
-function hideHideSwitchNetworkMessage() {
-  $('#switchNetworkBox').addClass('d-none');   
+  hideAll();
+  $('#switchNetworkBox').removeClass('d-none');  
 }
 
 function showWalletAccountMessage() {  
-  $('#connectWalletBox').removeClass('d-none');
-  hideLoading();
+  hideAll();
+  $('#connectWalletBox').removeClass('d-none');  
 }
 
-function hideWalletAccountMessage() {
-  $('#connectWalletBox').addClass('d-none');   
+function hideAll() {
+  $('#connectWalletBox').addClass('d-none');     
+  $('#switchNetworkBox').addClass('d-none');   
+  $('#installMetamaskBox').addClass('d-none');     
+  $('#buyNekoBox').addClass('d-none');   
+  $('#loading').addClass('d-none'); 
+  $('#buying').addClass('d-none');
 }
 
 //
@@ -95,13 +96,11 @@ function handleChainChanged(chainId) {
 }
 
 function handleAccountsChanged(accounts) {  
-  if (accounts.length === 0) {     
-    hideBuyButton();   
+  if (accounts.length === 0) {         
     showWalletAccountMessage();    
     console.log("No accounts available");
   } else if (accounts[0] !== signer.getAddress()) {              
-    signer = provider.getSigner(accounts[0]); 
-    hideWalletAccountMessage();     
+    signer = provider.getSigner(accounts[0]);     
     showBuyButton(); 
     console.log("Account changed to", accounts[0]);
   } else {
@@ -120,17 +119,13 @@ function handleConnect(connectInfo) {
       } else if (chainId != AVALANCHE_MAINNET_PARAMS.chainId) {
         showSwitchNetworkMessage();        
       } else {
-        console.log("Metamask connected");
-        hideWalletAccountMessage();
+        console.log("Metamask connected");        
         showBuyButton();
       }
     });  
-  if (chainId != AVALANCHE_MAINNET_PARAMS.chainId 
-    && chainId != AVALANCHE_TESTNET_PARAMS.chainId) {        
+  if (chainId != AVALANCHE_MAINNET_PARAMS.chainId) {        
     showSwitchNetworkMessage();
-  } else {
-    hideHideSwitchNetworkMessage(); 
-  }      
+  } 
 }
 
 function handleDisconnect(error) {  
@@ -200,17 +195,30 @@ function addNeko() {
   }  
 }
 
-function buyNeko() {
-  console.log(contract);  
+function buyNeko(amount) {     
+  const rawAmount = this.dataset.amount;
+  if (rawAmount == '0.08' || rawAmount == '0.8' || rawAmount == '8.0') {
+    const amount = ethers.utils.parseUnits(rawAmount, 'ether');    
+    shop.buy({value: amount, gasLimit: 250000})
+      .then(tx => {
+        console.log("transaction submitted");
+        showGettingNekos();
+        return tx.wait();
+      })
+      .then(res => {
+        console.log("transaction success");
+        showBuyButton(true);         
+      })
+      .catch(err => {
+        console.error("something is wrong")        
+        showBuyButton(false);    
+      })
+  } else {
+    console.error('unexpected amount:', rawAmount);    
+  }
 }
 
 function initialize() {      
-  if (window.ethereum !== undefined) {    
-    ethereum.on('connect', handleConnect);
-    ethereum.on('disconnect', handleDisconnect);
-    ethereum.on('chainChanged', handleChainChanged);
-    ethereum.on('accountsChanged', handleAccountsChanged);
-  }
   detectEthereumProvider().then(eth => {
     if (eth) {
       if (eth !== window.ethereum) {
@@ -218,24 +226,28 @@ function initialize() {
       }
       console.log("Starting the app");
 
-      provider = new ethers.providers.Web3Provider(eth);    
-      contract = new ethers.Contract(contractAddress, abi, provider);    
-      signer = provider.getSigner(0);             
-      // ethereum.request({method: 'eth_accounts'})
-      //   .then(accounts => currentAccount = accounts[0])
+      provider = new ethers.providers.Web3Provider(eth);          
+      signer = provider.getSigner(0);       
+      shop = new ethers.Contract(shopAddr, abi, signer);      
     } else {
       console.log("Install MetaMask");
       showInstallMetaMaskMessage();      
     }  
   });  
 
-
-
   $('button.install').click(installMetaMask);
   $('button.switch').click(switchNetwork);
   $('button.connect').click(connectAccount);
-  $('#buy-button').click(buyNeko);
+  $('button.buy').click(buyNeko);
   $('#add-link').click(addNeko);
+}
+
+if (window.ethereum !== undefined) { 
+  console.log("Registering event handlers");
+  ethereum.on('connect', handleConnect);
+  ethereum.on('disconnect', handleDisconnect);
+  ethereum.on('chainChanged', handleChainChanged);
+  ethereum.on('accountsChanged', handleAccountsChanged);
 }
 
 $(document).ready(initialize)

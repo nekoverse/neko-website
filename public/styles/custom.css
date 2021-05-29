@@ -8,6 +8,9 @@
 	font-family: 'Avenir Light'; 
 	src: url("../fonts/avenir-light/avenirltstd-light.otf");
 }
+* {
+  border-radius: 0 !important;
+}
 header {
 	background-color: #F9F9F9;
 	font-family: "Impact", sans-serif !important
@@ -70,4 +73,15 @@ li:before {
 	height: 70px; 
 	width: 100%; 
 	display: inline-block;			
+}
+.action-section {
+	width: 400px;
+}
+.btn-left-rounded {
+	border-top-left-radius: 24px !important;
+	border-bottom-left-radius: 24px !important;
+}
+.btn-right-rounded {
+	border-top-right-radius: 24px !important;
+	border-bottom-right-radius: 24px !important;
 }
