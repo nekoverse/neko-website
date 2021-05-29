@@ -2,7 +2,7 @@ const abi = [
   "function buy() external payable",
 ]
 
-const shopAddr = "0xa7F7f2fBEC2ebae5AD77Cc0b9A36DF44C88a2eDf";
+const shopAddr = "0xcA379Ca1c47dD5dEa5dAA331529E4eC1Cf0c32E0";
 
 
 const AVALANCHE_MAINNET_PARAMS = {
