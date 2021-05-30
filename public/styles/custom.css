@@ -13,7 +13,7 @@
 }
 header {
 	background-color: #F9F9F9;
-	font-family: "Impact", sans-serif !important
+	font-family: "Avenir Light" !important	
 }
 body {                
 	color: #000;
@@ -67,10 +67,10 @@ li:before {
 .center {
     margin-left: auto;
     margin-right: auto;
-    width: 19em		
+    width: 15em		
 }	
 .socials {
-	height: 70px; 
+	height: 55px; 
 	width: 100%; 
 	display: inline-block;			
 }
@@ -84,4 +84,7 @@ li:before {
 .btn-right-rounded {
 	border-top-right-radius: 24px !important;
 	border-bottom-right-radius: 24px !important;
+}
+.top-right {
+  inset: 0 0 auto auto;
 }
