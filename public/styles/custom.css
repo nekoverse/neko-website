@@ -20,7 +20,7 @@ body {
 	background: #F9F9F9;
 	font-family: "Avenir Light" !important
 }
-h1, h2, h3, h4 {
+h1, h2, h3, h4, h5 {
 	font-family: "Lulo Clean Bold" !important
 }
 hr {
@@ -77,11 +77,11 @@ li:before {
 .action-section {
 	width: 400px;
 }
-.btn-left-rounded {
+.left-rounded {
 	border-top-left-radius: 24px !important;
 	border-bottom-left-radius: 24px !important;
 }
-.btn-right-rounded {
+.right-rounded {
 	border-top-right-radius: 24px !important;
 	border-bottom-right-radius: 24px !important;
 }
