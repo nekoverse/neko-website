@@ -202,15 +202,15 @@ function handleAccountsChanged(accounts) {
           showLoading(ACTION_GROUP_2);    
           return neko.approve(lottoAddr, amt);
         } else {
-          throw Error("This shouldn't happen", accounts)          
+          throw new Error("This shouldn't happen", accounts)          
         }                  
       })
       .then(tx => {                       
-        console.log("transaction submitted");
+        console.log("Approval transaction submitted");
         return tx.wait();      
       })
       .then(res => {
-        console.log("transaction success");   
+        console.log("Approval transaction success");   
         showBuyButton();   
         showLottoBoard();     
         console.log("Account changed to", accounts[0]);              
@@ -228,7 +228,7 @@ function handleAccountsChanged(accounts) {
         }           
       })
       .catch(err => {
-        console.error("something is wrong", err);
+        console.error(err);
       })                 
   }
 }
@@ -238,17 +238,20 @@ function handleConnect(connectInfo) {
   chainId = connectInfo.chainId;    
   ethereum.request({ method: 'eth_accounts'})
     .then(accounts => {  
-      if (accounts.length === 0 && chainId == AVALANCHE_TESTNET_PARAMS.chainId) {
-        console.log("Account not connected");
+      if (accounts.length === 0 && chainId == AVALANCHE_TESTNET_PARAMS.chainId) {        
         showWalletAccountMessage(ACTION_GROUP_1);    
-        showWalletAccountMessage(ACTION_GROUP_2);        
+        showWalletAccountMessage(ACTION_GROUP_2); 
+        throw new Error("Account not connected");      
       } else if (chainId != AVALANCHE_TESTNET_PARAMS.chainId) {
         showSwitchNetworkMessage(ACTION_GROUP_1);
         showSwitchNetworkMessage(ACTION_GROUP_2);     
+        throw new Error("Wrong network connected");
       } else {
         console.log("Metamask connected");        
         showBuyButton();                
-        showLottoBoard();            
+        showLottoBoard();   
+        pollLottoState();       
+        refreshLottoStateBoard();                   
       }
       return accounts[0];
     })
@@ -261,6 +264,9 @@ function handleConnect(connectInfo) {
       } else {
         showBuyLottoButton();  
       }           
+    })
+    .catch(err => {
+      console.error(err);
     })  
   if (chainId != AVALANCHE_TESTNET_PARAMS.chainId) {        
     showSwitchNetworkMessage(ACTION_GROUP_1);
@@ -352,15 +358,15 @@ function buyLotto() {
   const amount = ethers.BigNumber.from(amountScaled);
   lotto.buyIn(amount)
     .then(tx => {
-      console.log("transaction submitted");      
+      console.log("BuyIn transaction submitted");      
       return tx.wait();
     })
     .then(res => {
-      console.log("transaction success");
+      console.log("BuyIn transaction success");
       showEntryStatus(amount);         
     })
     .catch(err => {
-      console.error("something is wrong", err)        
+      console.error(err);
       showBuyLottoButton(false);    
     })
   console.log("buying lotto", amount.toString())
@@ -372,20 +378,20 @@ function buyNeko(amount) {
     const amount = ethers.utils.parseUnits(rawAmount, 'ether');    
     shop.buy({value: amount, gasLimit: 250000})
       .then(tx => {
-        console.log("transaction submitted");
+        console.log("Buy transaction submitted");
         showGettingNekos();
         return tx.wait();
       })
       .then(res => {
-        console.log("transaction success");
+        console.log("Buy transaction success");
         showBuyButton(true);         
       })
       .catch(err => {
-        console.error("something is wrong", err)        
+        console.error(err);
         showBuyButton(false);    
       })
   } else {
-    console.error('unexpected amount:', rawAmount);    
+    console.error('Unexpected amount:', rawAmount);    
   }
 }
 
@@ -421,9 +427,7 @@ function initialize() {
       signer = provider.getSigner(0);       
       shop = new ethers.Contract(shopAddr, shopAbi, signer);
       lotto = new ethers.Contract(lottoAddr, lottoAbi, signer);
-      neko = new ethers.Contract(nekoAddr, nekoAbi, signer);
-      pollLottoState();       
-      refreshLottoStateBoard();     
+      neko = new ethers.Contract(nekoAddr, nekoAbi, signer);   
     } else {
       console.log("Install MetaMask");
       showInstallMetaMaskMessage(ACTION_GROUP_1);      
