@@ -21,7 +21,7 @@ const nekoAbi = [
 // const lottoAddr = "";
 
 // Fuji addresses
-const nekoAddr = "0xD9702F5E3b0eb7452967CB82529776D672bdC03F";
+const nekoAddr = "0x3a5e1eC94944F37d30ae4e598FC5Ea12164EF09a";
 const shopAddr = "0x587323C54d71A03bBCce4B914ace0bC6f39c5Ab5";
 const lottoAddr = "0xc97899E9bE437172dc1ef52991808b947FB17827";
 
@@ -131,7 +131,7 @@ function showBuyButton(success) {
 }
 
 function showBuyLottoButton(success) {  
-  hideAll(ACTION_GROUP_2.list);
+  hideAll(ACTION_GROUP_2.list, "#lottoStatus");
   $('#buyLottoTicket').removeClass('d-none');
   if (success !== undefined) {
     if (success) {
@@ -144,8 +144,8 @@ function showBuyLottoButton(success) {
 
 
 function showEntryStatus(myStake) {  
-  hideAll(ACTION_GROUP_2.list);
-  $('#myStake').val(String(myStake / 10**9) + "B");
+  hideAll(ACTION_GROUP_2.list, "#lottoStatus");
+  $('#myStake').text(String(myStake / 10**9) + "B");
   $('#alreadyBought').removeClass('d-none');
 }
 
@@ -190,32 +190,41 @@ function handleAccountsChanged(accounts) {
     showWalletAccountMessage(ACTION_GROUP_1);    
     showWalletAccountMessage(ACTION_GROUP_2);    
     console.log("No accounts available");
-  } else {
+  } else {    
+    let signerAddr;
     signer.getAddress()
       .then(addr => {      
         if (accounts[0] !== addr) {   
           signer = provider.getSigner(accounts[0]);    
           const amt = ethers.utils.parseUnits('100000000000000', 'ether');    
+          signerAddr = addr;  
+          showLoading(ACTION_GROUP_2);    
           return neko.approve(lottoAddr, amt);
         } else {
           throw Error("This shouldn't happen", accounts)          
-        }                
+        }                  
       })
-      .then(tx => {                  
+      .then(tx => {                       
         console.log("transaction submitted");
         return tx.wait();      
       })
       .then(res => {
         console.log("transaction success");   
-        showBuyButton(); 
-        const myStake = getMyStake();
+        showBuyButton();   
+        showLottoBoard();     
+        console.log("Account changed to", accounts[0]);              
+      })         
+      .then(() => {
+        console.log(signerAddr);
+        return lotto.depositOf(signerAddr)
+      })
+      .then(deposit => {      
+        myStake = deposit.toString();          
         if (myStake > 0) {      
           showEntryStatus(myStake);  
         } else {
           showBuyLottoButton();  
-        }   
-        showLottoBoard();     
-        console.log("Account changed to", accounts[0]);              
+        }           
       })
       .catch(err => {
         console.error("something is wrong", err);
@@ -237,16 +246,21 @@ function handleConnect(connectInfo) {
         showSwitchNetworkMessage(ACTION_GROUP_2);     
       } else {
         console.log("Metamask connected");        
-        showBuyButton();
-        const myStake = getMyStake();
-        if (myStake > 0) {      
-          showEntryStatus(myStake);          
-        } else {
-          showBuyLottoButton();          
-        }  
+        showBuyButton();                
         showLottoBoard();            
       }
-    });  
+      return accounts[0];
+    })
+    .then(addr => lotto.depositOf(addr))
+    .then(deposit => {      
+      myStake = deposit.toString();      
+      console.log(myStake);
+      if (myStake > 0) {      
+        showEntryStatus(myStake);  
+      } else {
+        showBuyLottoButton();  
+      }           
+    })  
   if (chainId != AVALANCHE_TESTNET_PARAMS.chainId) {        
     showSwitchNetworkMessage(ACTION_GROUP_1);
     showSwitchNetworkMessage(ACTION_GROUP_2);
@@ -325,8 +339,8 @@ function getMyStake() {
   let res;
   signer.getAddress()
     .then(addr => lotto.depositOf(addr))
-    .then(deposit => {
-      res = deposit;
+    .then(deposit => {      
+      res = deposit.toString();
     })
   return res;
 }
@@ -335,10 +349,6 @@ function buyLotto() {
   const amountRaw = $("input.buyLotto").val();  
   const amountScaled = amountRaw * 10**9;    
   const amount = ethers.BigNumber.from(amountScaled);
-  signer.getAddress()
-    .then(addr => neko.allowance(addr, lottoAddr))
-    .then(tx => tx.wait())
-    .then(res => console.log(res))
   lotto.buyIn(amount)
     .then(tx => {
       console.log("transaction submitted");      
@@ -378,21 +388,20 @@ function buyNeko(amount) {
   }
 }
 
-function getLottoState() {
+function pollLottoState() {
   lotto.drawNo().then(n => lottoState.drawNo = n);
   lotto.playerCount().then(n => lottoState.entries = n);
   lotto.maxAmount().then(n => lottoState.maxDeposit = n);
   lotto.totalAmount().then(n => lottoState.totalSoFar = n);  
-  setTimeout(getLottoState, 1000);    
+  setTimeout(pollLottoState, 1000);    
 }
 
-function updateLottoStateBoard() {  
-  // hideAll(ACTION_GROUP_2.list);
+function refreshLottoStateBoard() {    
   $('#drawNo').text(String(lottoState.drawNo));
   $('#entries').text(String(lottoState.entries));
   $('#totalSoFar').text(String(lottoState.totalSoFar / 10**9) + "B");
   $('#maxDeposit').text(String(lottoState.maxDeposit / 10**9) + "B");
-  setTimeout(updateLottoStateBoard, 1000);   
+  setTimeout(refreshLottoStateBoard, 1000);   
 }
 
 
@@ -409,8 +418,8 @@ function initialize() {
       shop = new ethers.Contract(shopAddr, shopAbi, signer);
       lotto = new ethers.Contract(lottoAddr, lottoAbi, signer);
       neko = new ethers.Contract(nekoAddr, nekoAbi, signer);
-      getLottoState();       
-      updateLottoStateBoard();     
+      pollLottoState();       
+      refreshLottoStateBoard();     
     } else {
       console.log("Install MetaMask");
       showInstallMetaMaskMessage(ACTION_GROUP_1);      
