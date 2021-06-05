@@ -95,6 +95,7 @@ let lotto;
 let neko;
 
 const lottoState = {
+    lastDrawNo: -1,
     drawNo: -1,
     entries: -1,
     totalSoFar: -1 * 10**9,
@@ -396,7 +397,10 @@ function pollLottoState() {
   setTimeout(pollLottoState, 1000);    
 }
 
-function refreshLottoStateBoard() {    
+function refreshLottoStateBoard() { 
+  if (lottoState.totalSoFar == 0) {
+    showBuyLottoButton();
+  } 
   $('#drawNo').text(String(lottoState.drawNo));
   $('#entries').text(String(lottoState.entries));
   $('#totalSoFar').text(String(lottoState.totalSoFar / 10**9) + "B");
