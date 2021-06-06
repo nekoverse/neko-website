@@ -23,7 +23,7 @@ const nekoAbi = [
 // Fuji addresses
 const nekoAddr = "0x3a5e1eC94944F37d30ae4e598FC5Ea12164EF09a";
 const shopAddr = "0x587323C54d71A03bBCce4B914ace0bC6f39c5Ab5";
-const lottoAddr = "0xc97899E9bE437172dc1ef52991808b947FB17827";
+const lottoAddr = "0xE061Fd125D649E0a2B7efB2D3E41158493216380";
 
 
 const AVALANCHE_MAINNET_PARAMS = {
@@ -146,7 +146,7 @@ function showBuyLottoButton(success) {
 
 function showEntryStatus(myStake) {  
   hideAll(ACTION_GROUP_2.list, "#lottoStatus");
-  $('#myStake').text(String(myStake / 10**9) + "B");
+  $('#myStake').text(String(myStake / 10**9 / 10**8) + "B");
   $('#alreadyBought').removeClass('d-none');
 }
 
@@ -355,7 +355,8 @@ function getMyStake() {
 function buyLotto() {  
   const amountRaw = $("input.buyLotto").val();  
   const amountScaled = amountRaw * 10**9;    
-  const amount = ethers.BigNumber.from(amountScaled);
+  const amountStr = String(amountScaled) + "00000000";
+  const amount = ethers.BigNumber.from(amountStr);
   lotto.buyIn(amount)
     .then(tx => {
       console.log("BuyIn transaction submitted");      
@@ -409,8 +410,8 @@ function refreshLottoStateBoard() {
   } 
   $('#drawNo').text(String(lottoState.drawNo));
   $('#entries').text(String(lottoState.entries));
-  $('#totalSoFar').text(String(lottoState.totalSoFar / 10**9) + "B");
-  $('#maxDeposit').text(String(lottoState.maxDeposit / 10**9) + "B");
+  $('#totalSoFar').text(String(lottoState.totalSoFar / 10**9 / 10**8) + "B");
+  $('#maxDeposit').text(String(lottoState.maxDeposit / 10**9 / 10**8) + "B");
   setTimeout(refreshLottoStateBoard, 1000);   
 }
 

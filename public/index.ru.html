@@ -2,7 +2,7 @@
 <html lang="en">
   	<head>
 	    <meta charset="utf-8" />
-	    <title>NEKO Lucky Cat</title>
+	    <title>NEKO Счастливый Кот</title>
 	    <meta name="description" content="Neko"/>    
 	    <meta name="author" content="Unknown" />
 	    <link rel="canonical" href="https://neko.vision">
@@ -29,8 +29,7 @@
                     <a class="dropdown-item" href="index.zh.html"><span class="flag-icon flag-icon-cn" style="font-size: 1.5em;"></span> 汉语</a> 
                     <a class="dropdown-item" href="index.ru.html"><span class="flag-icon flag-icon-ru" style="font-size: 1.5em;"></span> Русский</a> 
                 </div>
-            </div>	 	    	  		        	        
-	    </div>
+            </div>	 	    	  		        	        	    
 	    </header>
 	    <main class="pt-3 pb-5 container-sm">
 			<section id="intro" class="pt-5">
@@ -48,14 +47,14 @@
 				</div>
 
 				<div>
-			      	<div id="loading" 
+			      	<div id="loading1" 
 			      		 class="action-section position-relative mx-auto">
 			      		<img src="images/loading.gif" class="mx-auto d-block pb-2" alt="загрузка"></img>
 						<div class="text-center">	
 							Если я не исчезну в ближайшее время,</br> обновите страницу
 						</div>			      		 
 			      	</div>
-			      	<div id="buying" 
+			      	<div id="buying1" 
 			      		 class="action-section position-relative mx-auto d-none">
 			      		<img src="images/loading.gif" class="mx-auto d-block pb-2" alt="не обновляйте страницу"></img>
 						<div class="text-center">	
@@ -82,26 +81,26 @@
 							<a id="add-link" href="" class="fs-smaller">Добавь меня в свой кошелек на потом</a>
 						</div>
 					</div>				      				
-			      	<div id="installMetamaskBox" 
+			      	<div id="installMetamaskBox1" 
 			      		 class="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
 			       		<div class="text-center pb-3 fs-smaller" role="alert">
 			       			Для покупки Neko необходимо установить MetaMask.
 			       		</div>				       			          
-			          	<button class="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Установить MetaMask</button>			          	
+			          	<button class="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Установить MetaMask</button>
 			      	</div>
-			      	<div id="connectWalletBox" 
+			      	<div id="connectWalletBox1" 
 			      		 class="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
 			       		<div class="text-center pb-3 fs-smaller" role="alert">
 			       			Для покупки Neko необходимо подключить кошелек.	
 			       		</div>	
-			          	<button class="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Подключить кошелек</button>		        	
+			          	<button class="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Подключить кошелек</button>
 			      	</div>
-			      	<div id="switchNetworkBox" 
+			      	<div id="switchNetworkBox1" 
 			      		 class="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
 			        	<div class="text-center pb-3 fs-smaller" role="alert">
 			          		Неко живут на сети Avalanche. </br> Переключите сеть.
 			          	</div>
-			          	<button class="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Подключится к Avalanche</button>            			        	   
+			          	<button class="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Подключится к Avalanche</button>
 			      	</div>  
 			    </div>
 
@@ -125,7 +124,7 @@
 				  		<h4>VISION</h2>
 				  	</div>
 				  	<div class="col w-75 fs-normal">                                    
-				  		<p>Превратить NEKO в первую покупку на сети Avalanche.</p>
+				  		<p>Превратить NEKO в вашу первую покупку на сети Avalanche.</p>
 				  	</div>
 				</div>
 				<div class="row pb-3">
@@ -162,10 +161,107 @@
 				</div>        
 				<hr/>           
 			</section>      
+			<section id="lottery" class="pt-5">            
+				<div class="position-relative pb-3">				
+					<h2 class="fw-bold text-center text-dark">NEKO LOTTO</h1>				
+				</div> 
+				<div class="position-relative pb-3">
+					<div class="text-center fs-normal">
+						<p>Играя в лотерею, вы помогаете повысить ликвидность NEKO. </br>
+							Вы также можете выиграть.</p>					   
+					</div>				      
+				</div>
+		      	<div id="loading2" 
+		      		 class="action-section position-relative mx-auto">
+		      		<img src="images/loading.gif" class="mx-auto d-block pb-2" alt="Loading"></img>
+					<div class="text-center">	
+						You need to approve me, <br/>check your MetaMask
+					</div>			      		 
+		      	</div>				
+				<div id="buyLottoTicket" 
+					 class="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+					<div class="text-center fs-smaller">	
+						Enter the lotto with NEKO
+					</div>
+					<div class="pt-3 pb-3">
+						<div class="input-group input-group-lg mb-3 pl-4 pr-4">
+						  <input type="text" class="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)">
+						  <span class="input-group-text">B</span>
+						  <button type="button" class="buyLotto btn btn-lg btn-primary right-rounded">Купить</button>
+						</div>											
+					</div>
+				</div>					
+				<div id="alreadyBought" 
+					 class="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+					<div class="text-center fs-smaller">	
+						Вы уже участвуете в этом розыгрыше.
+					</div>
+					<div id="myStake" class="pt-1 pb-1 fs-extra-large text-center">
+					3B										
+					</div>
+				</div>				
+				<div id="lottoStatus" 
+					 class="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+					<h5>Розыгришь #<span id="drawNo">x</span></h5>
+					<div class="row fs-normal">
+						<div class="col-9">Заявок:</div>
+					 	<div id="entries" class="col">x</div>
+					 </div>	
+					<div class="row fs-normal">
+						<div class="col-9">Итого:</div>
+					 	<div id="totalSoFar" class="col">x</div>
+					</div>					 					 				 
+				 	<div class="row fs-normal">
+				 		<div class="col-9">Максимальный депозит:</div>
+				 		<div id="maxDeposit" class="col">x</div>
+				 	</div>					 				
+				</div>				
+		      	<div id="installMetamaskBox2" 
+		      		 class="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+		       		<div class="text-center pb-3 fs-smaller" role="alert">
+		       			Для игры в лотерею необходимо установить MetaMask.
+		       		</div>				       			          
+		          	<button class="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Установить MetaMask</button>			          	
+		      	</div>
+		      	<div id="connectWalletBox2" 
+		      		 class="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+		       		<div class="text-center pb-3 fs-smaller" role="alert">
+		       			Для игры в лотоеею необходимо подключить кошелек.
+		       		</div>	
+		          	<button class="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Подключить кошелек</button>		        	
+		      	</div>
+		      	<div id="switchNetworkBox2" 
+		      		 class="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+		        	<div class="text-center pb-3 fs-smaller" role="alert">
+		          		Неко живут на сети Avalanche. </br> Переключите сеть.
+		          	</div>
+		          	<button class="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Подключится к Avalanche</button>
+		      	</div>  								
+				<div class="position-relative pb-3 fs-normal">
+			  		<p class="font-weight-bold">Как это работает?</p>
+			  		<ul>			  		
+						<li>Каждый розыгрыш требует 8 заявок.</li>
+						<li>Вы можете принять участие в розыгрыше только один раз.</li>
+						<li>Вы можете участвовать в розыгрыше с любым количеством NEKO (в миллиардах).</li>
+						<li>Ваши шансы на победу пропорциональны вашей ставке.</li>
+						<li>Если вы выиграете, 90% пула будет отправлено на ваш кошелек.</li>
+						<li>Остальные 10% добавляются в качестве ликвидности NEKO на одной из бирж.</li>
+						<li>После того, как победитель выбран, лотерея сбрасывается, и вы можете войти снова.</li>
+			  		</ul>								      
+				</div>				
+				<hr/>           
+			</section>
 			<section id="art" class="pt-5">            
 				<div class="position-relative pb-3">				
 					<h2 class="fw-bold text-center text-dark">NEKO ART</h1>				
 				</div> 
+				<div class="position-relative pb-3">
+					<div class="text-center fs-normal">
+						<p>NEKO regularly drops artwork on the community.</br>
+							This is the list of drops so far.
+						</p>
+					</div>				      
+				</div>					
 				<div class="row">
 				  	<div class="col-4">             
 				  		<div style="display: inline-block;">
