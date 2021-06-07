@@ -17,13 +17,14 @@ const nekoAbi = [
 ]
 
 // Mainnet
-// const shopAddr = "0xcA379Ca1c47dD5dEa5dAA331529E4eC1Cf0c32E0";
-// const lottoAddr = "";
+const nekoAddr = "0xD9702F5E3b0eb7452967CB82529776D672bdC03F";
+const shopAddr = "0xcA379Ca1c47dD5dEa5dAA331529E4eC1Cf0c32E0";
+const lottoAddr = "0x702cC0109863a7642048B75120150065563B1422";
 
 // Fuji addresses
-const nekoAddr = "0x3a5e1eC94944F37d30ae4e598FC5Ea12164EF09a";
-const shopAddr = "0x587323C54d71A03bBCce4B914ace0bC6f39c5Ab5";
-const lottoAddr = "0xE061Fd125D649E0a2B7efB2D3E41158493216380";
+// const nekoAddr = "0x3a5e1eC94944F37d30ae4e598FC5Ea12164EF09a";
+// const shopAddr = "0x587323C54d71A03bBCce4B914ace0bC6f39c5Ab5";
+// const lottoAddr = "0xE061Fd125D649E0a2B7efB2D3E41158493216380";
 
 
 const AVALANCHE_MAINNET_PARAMS = {
@@ -238,11 +239,11 @@ function handleConnect(connectInfo) {
   chainId = connectInfo.chainId;    
   ethereum.request({ method: 'eth_accounts'})
     .then(accounts => {  
-      if (accounts.length === 0 && chainId == AVALANCHE_TESTNET_PARAMS.chainId) {        
+      if (accounts.length === 0 && chainId == AVALANCHE_MAINNET_PARAMS.chainId) {        
         showWalletAccountMessage(ACTION_GROUP_1);    
         showWalletAccountMessage(ACTION_GROUP_2); 
         throw new Error("Account not connected");      
-      } else if (chainId != AVALANCHE_TESTNET_PARAMS.chainId) {
+      } else if (chainId != AVALANCHE_MAINNET_PARAMS.chainId) {
         showSwitchNetworkMessage(ACTION_GROUP_1);
         showSwitchNetworkMessage(ACTION_GROUP_2);     
         throw new Error("Wrong network connected");
@@ -268,7 +269,7 @@ function handleConnect(connectInfo) {
     .catch(err => {
       console.error(err);
     })  
-  if (chainId != AVALANCHE_TESTNET_PARAMS.chainId) {        
+  if (chainId != AVALANCHE_MAINNET_PARAMS.chainId) {        
     showSwitchNetworkMessage(ACTION_GROUP_1);
     showSwitchNetworkMessage(ACTION_GROUP_2);
   } 
@@ -287,7 +288,7 @@ function switchNetwork() {
   ethereum
     .request({
         method: 'wallet_addEthereumChain',
-        params: [AVALANCHE_TESTNET_PARAMS]
+        params: [AVALANCHE_MAINNET_PARAMS]
     })
     .then(handleChainChanged) 
     .catch((error) => {
