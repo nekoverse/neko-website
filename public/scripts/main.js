@@ -19,12 +19,12 @@ const nekoAbi = [
 // Mainnet
 const nekoAddr = "0xD9702F5E3b0eb7452967CB82529776D672bdC03F";
 const shopAddr = "0xcA379Ca1c47dD5dEa5dAA331529E4eC1Cf0c32E0";
-const lottoAddr = "0x702cC0109863a7642048B75120150065563B1422";
+const lottoAddr = "0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c";
 
 // Fuji addresses
 // const nekoAddr = "0x3a5e1eC94944F37d30ae4e598FC5Ea12164EF09a";
 // const shopAddr = "0x587323C54d71A03bBCce4B914ace0bC6f39c5Ab5";
-// const lottoAddr = "0xE061Fd125D649E0a2B7efB2D3E41158493216380";
+// const lottoAddr = "0xDD98e7fCAa7d9a01F0d18a026aEfd3D42414ec0D";
 
 
 const AVALANCHE_MAINNET_PARAMS = {
