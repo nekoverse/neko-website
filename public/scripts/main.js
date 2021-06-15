@@ -443,6 +443,13 @@ function initialize() {
   $('button.buy').click(buyNeko);
   $('button.buyLotto').click(buyLotto);  
   $('#add-link').click(addNeko);
+  $(document).click(function (event) {
+    var clickover = $(event.target);
+    var _opened = $(".collapse").hasClass("show");
+    if (_opened === true && !clickover.hasClass("navbar-toggler")) {
+      $(".navbar-toggler").click();
+    }
+  });  
 }
 
 if (window.ethereum !== undefined) { 
