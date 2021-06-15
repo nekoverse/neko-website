@@ -74,6 +74,11 @@ li:before {
 	width: 100%; 
 	display: inline-block;			
 }
+.nft-display {
+	height: 250px; 
+	width: 100%; 
+	display: inline-block;			
+}
 .action-section {
 	width: 400px;
 }
@@ -87,4 +92,8 @@ li:before {
 }
 .top-right {
   inset: 0 0 auto auto;
+}
+.no-padding {
+	padding-left: 0; 
+	padding-right: 0;
 }
