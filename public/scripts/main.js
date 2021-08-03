@@ -281,7 +281,7 @@ function handleDisconnect(error) {
 }
 
 //
-// Web3 actions
+// Web3 actions 
 //
 
 function switchNetwork() {
