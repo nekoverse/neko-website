@@ -79,6 +79,11 @@ li:before {
 	width: 100%; 
 	display: inline-block;			
 }
+.img-profile {
+	height: 180px; 
+	width: 180px; 
+	display: inline-block;			
+}
 .action-section {
 	width: 400px;
 }
