@@ -74,6 +74,12 @@ li:before {
 	width: 100%; 
 	display: inline-block;			
 }
+.venues {
+	height: 75px; 
+	width: 180%; 
+	margin-left:-50px;
+	display: inline-block;			
+}
 .nft-display {
 	height: 180px; 
 	width: 100%; 
