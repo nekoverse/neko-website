@@ -253,7 +253,7 @@ function bid() {
   const tokenId = parseInt($(".tokenId", pppp).val())
   let bid = $("input.bidAmount", pppp).val();
   bid = ethers.utils.parseUnits(bid, 'ether');
-  console.log("Placing " + bid + " bid on", tokenId);
+  console.log("Placing " + bid + " bid on token #", tokenId);
   auction.bidTopUp(tokenId, {value: bid})
     .then(tx => {
       console.log("bid transaction submitted");
@@ -278,6 +278,7 @@ function upbid() {
   const tokenId = parseInt($(".tokenId", pppp).val())
   let bid = $(this).data("amount");
   bid = ethers.utils.parseUnits(bid.toString(), 'ether');
+  console.log("Upbiding by " + bid + " token #", tokenId);
   auction.bidTopUp(tokenId, {value: bid})
     .then(tx => {
       console.log("bid transaction submitted");
