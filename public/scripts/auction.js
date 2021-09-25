@@ -253,6 +253,7 @@ function bid() {
   const tokenId = parseInt($(".tokenId", pppp).val())
   let bid = $("input.bidAmount", pppp).val();
   bid = ethers.utils.parseUnits(bid, 'ether');
+  console.log("Placing " + bid + " bid on", tokenId);
   auction.bidTopUp(tokenId, {value: bid})
     .then(tx => {
       console.log("bid transaction submitted");
