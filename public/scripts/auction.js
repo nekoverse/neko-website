@@ -74,12 +74,13 @@ let signer;
 let auction;
 let ultra64;
 
-let tokensOnSale = [0, 1, 2, 3, 4, 5, 6, 7];
+let tokensOnSale = [8, 9, 10, 11, 12, 13, 14, 15];
 let tokensSold = [
+  0, 1, 2, 3, 4, 5, 6, 7
 ];
 let soldPrices = {};
 let soldTokenSets = [
-  // [0, 1, 2, 3, 4, 5, 6, 7],
+  [0, 1, 2, 3, 4, 5, 6, 7],
   // [8, 9, 10, 11, 12, 13, 14, 15],
   // [16, 17, 18, 19, 20, 21, 22, 23],
   // [24, 25, 26, 27, 28, 29, 30, 31],
@@ -515,7 +516,12 @@ async function pollPastAuctionData() {
     const highBid = await auction.highestBidOn(tokenId);
     const sold = $("#sold >> ");
     const p = $(".tokenId[value=" + tokenId +"]", sold).parent();
-    $(".soldFor", p).text(parseInt(ethers.utils.formatUnits(highBid, "ether")));
+    console.log(highBid);
+    if (highBid > 0) {
+      $(".soldFor", p).text(parseInt(ethers.utils.formatUnits(highBid, "ether")));
+    } else {
+      $(".soldFor", p).text("-");
+    }
   }
 }
 
