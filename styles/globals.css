@@ -1,0 +1,134 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  @font-face {
+    font-family: 'Lulo Clean Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Lulo Clean Bold'), url('/fonts/lulo-clean/lulo-clean-bold.ttf');
+  }
+  @font-face {
+    font-family: 'Avenir Light';
+    src: url("/fonts/avenir-light/avenirltstd-light.otf");
+  }
+  * {
+    border-radius: 0 !important;
+  }
+  header {
+    background-color: #F9F9F9;
+    font-family: "Avenir Light" !important
+  }
+  body {
+    color: #000;
+    background: #F9F9F9;
+    font-family: "Avenir Light" !important
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: "Lulo Clean Bold" !important
+  }
+  hr {
+    border-top: 1px solid #8c8b8b;
+  }
+  ul {
+    list-style-type: none;
+  }
+  li {
+    padding-left: 1.3em;
+    letter-spacing: 2px;
+    font-size: 20px;
+  }
+  li:before {
+    content: "+";
+    display: inline-block;
+    margin-left: -2.3em;
+    width: 1.3em;
+  }
+}
+
+@layer components {
+  #buy-button {
+    font-family: "Lulo Clean Bold" !important;
+    font-size: 16px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+  }
+  .img-max {
+    max-width: 100%;
+    max-height: 100%
+  }
+  .socials {
+    height: 55px;
+    width: 100%;
+    display: inline-block;
+  }
+  .venues {
+    height: 75px;
+    width: 180%;
+    margin-left: -90px;
+    display: inline-block;
+  }
+}
+
+@layer utilities {
+  .ff-lulo {
+    font-family: "Lulo Clean Bold" !important
+  }
+  .fs-extra-large {
+    font-size: 96px;
+  }
+  .fs-large {
+    font-size: 48px;
+  }
+  .fs-normal {
+    letter-spacing: 2px;
+    font-size: 24px;
+  }
+  .fs-smaller {
+    letter-spacing: 2px;
+    font-size: 20px;
+  }
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+    width: 15em
+  }
+  .nft-display {
+    height: 180px;
+    width: 100%;
+    display: inline-block;
+  }
+  .nft-display-large {
+    height: 270px;
+    width: 100%;
+    display: inline-block;
+  }
+  .nft-display-small {
+    height: 135px;
+    width: 100%;
+    display: inline-block;
+  }
+  .img-profile {
+    height: 180px;
+    width: 180px;
+    display: inline-block;
+  }
+  .action-section {
+    width: 400px;
+  }
+  .left-rounded {
+    border-top-left-radius: 24px !important;
+    border-bottom-left-radius: 24px !important;
+  }
+  .right-rounded {
+    border-top-right-radius: 24px !important;
+    border-bottom-right-radius: 24px !important;
+  }
+  .top-right {
+    inset: 0 0 auto auto;
+  }
+  .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
