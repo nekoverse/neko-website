@@ -182,12 +182,12 @@ function Buy() {
                 <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
               </div>
             ) : (
-              <div id="connectWalletBox1"
-                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-                <div className="text-center pb-3 fs-smaller" role="alert">
+              <div
+                className="relative pt-3 pb-3 text-center alert alert-danger mx-auto">
+                <div className="pb-3 fs-smaller" role="alert">
                   Connect your wallet to get your NEKOs.
                 </div>
-                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
+                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-full"
                   onClick={connectWallet}>
                   Connect Wallet
                 </button>
@@ -281,7 +281,7 @@ export default function Home() {
         </div>
 
       </header>
-      <main className="pt-3 pb-5">
+      <main className="p-4">
         <section className="pt-5">
           <div className="max-w-xs mx-auto mb-6">
             <Image src={nekoLogo} layout="responsive" alt="Neko Logo" />
@@ -295,14 +295,18 @@ export default function Home() {
             <Buy />
           </div>
 
-          <div className="text-center fs-normal my-3">
+          <div className="text-center fs-normal my-4">
             <p>Total supply: 8,888,888,888,888,888<br />
               No inflation, No deflation, No tax.</p>
           </div>
 
-          <div className="text-center fs-normal my-3">
+          <div className="text-center fs-normal my-4">
             <p>NEKO contract on Avalanche C-Chain:<br />
-              <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions">0xD9702F5E3b0eb7452967CB82529776D672bdC03F</a></p>
+              <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions"
+                className="contract-id">
+                0xD9702F5E3b0eb7452967CB82529776D672bdC03F
+              </a>
+            </p>
           </div>
           <br />
           <div className="">
@@ -317,17 +321,32 @@ export default function Home() {
           </div>
           <br />
           <div className="position-relative pt-3 pb-3">
-            <div className="text-center fs-normal">
-              <p>NEKO Markets:<br /></p>
-            </div>
-            <div className="center">
-              <div className="venues">
-                <span className="m-1"><a href="https://info.pangolin.exchange/#/token/0xd9702f5e3b0eb7452967cb82529776d672bdc03f"><img src="images/pangolin_logo.svg" className="img-max p-1" alt="Pangolin" /></a></span>
-                <span className="m-1"><a href="https://www.traderjoexyz.com/#/trade"><img src="images/traderjoe_logo.png" className="img-max p-1" alt="Trader Joe" /></a></span>
-                <span className="m-1"><a href="https://nomics.com/assets/neko3-lucky-cat"><img src="images/nomics_logo.png" className="img-max p-1" alt="Nomics" /></a></span>
-                <span className="m-1"><a href="https://swap.olive.cash/#/swap"><img src="images/olive_logo.png" className="img-max p-1" alt="Olive" /></a></span>
-                <span className="m-1"><a href="https://www.livecoinwatch.com/price/LuckyCat-_NEKO"><img src="images/livecoinwatch_logo.png" className="img-max p-1" alt="Olive" /></a></span>
-              </div>
+            <p className="mb-4 text-center text-2xl font-bold">NEKO Markets:</p>
+            <div className="flex flex-row justify-center gap-4">
+              <span className="m-1">
+                <a href="https://info.pangolin.exchange/#/token/0xd9702f5e3b0eb7452967cb82529776d672bdc03f">
+                  <img src="images/pangolin_logo.svg" className="w-8 h-8" alt="Pangolin" />
+                </a>
+              </span>
+              <span className="m-1">
+                <a href="https://www.traderjoexyz.com/#/trade">
+                  <img src="images/traderjoe_logo.png" className="w-8 h-8" alt="Trader Joe" />
+                </a>
+              </span>
+              <span className="m-1">
+                <a href="https://nomics.com/assets/neko3-lucky-cat">
+                  <img src="images/nomics_logo.png" className="w-8 h-8" alt="Nomics" />
+                </a>
+              </span>
+              <span className="m-1"><a href="https://swap.olive.cash/#/swap">
+                <img src="images/olive_logo.png" className="w-8 h-8" alt="Olive" />
+              </a>
+              </span>
+              <span className="m-1">
+                <a href="https://www.livecoinwatch.com/price/LuckyCat-_NEKO">
+                  <img src="images/livecoinwatch_logo.png" className="w-8 h-8" alt="Olive" />
+                </a>
+              </span>
             </div>
           </div>
           <hr />
@@ -423,7 +442,11 @@ export default function Home() {
           <div className="position-relative pt-3 pb-3">
             <div className="text-center fs-normal">
               <p>NEKO Lotto contract on Avalanche C-Chain:<br />
-                <a href="https://cchain.explorer.avax.network/address/0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c/transactions">0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c</a></p>
+                <a href="https://cchain.explorer.avax.network/address/0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c/transactions"
+                  className="contract-id">
+                  0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c
+                </a>
+              </p>
             </div>
           </div >
           <hr />
@@ -527,7 +550,10 @@ export default function Home() {
               </div>
             </div>
             <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D/token-transfers">0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D</a>
+              <a href="https://cchain.explorer.avax.network/tokens/0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D/token-transfers"
+                className="contract-id">
+                0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D
+              </a>
               <div className="container pt-2 pb-4">
                 <div className="row">
                   <div className="col nft-display no-padding">
@@ -568,7 +594,10 @@ export default function Home() {
               </div>
             </div>
             <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211/token-transfers">0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211</a>
+              <a href="https://cchain.explorer.avax.network/tokens/0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211/token-transfers"
+                className="contract-id">
+                0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211
+              </a>
               <div className="container pt-2 pb-4">
                 <div className="row">
                   <div className="col nft-display no-padding">
@@ -609,7 +638,10 @@ export default function Home() {
               </div>
             </div>
             <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0x77dfd577a28A4937559e66F3E44De85A13de1116/token-transfers">0x77dfd577a28A4937559e66F3E44De85A13de1116</a>
+              <a href="https://cchain.explorer.avax.network/tokens/0x77dfd577a28A4937559e66F3E44De85A13de1116/token-transfers"
+                className="contract-id">
+                0x77dfd577a28A4937559e66F3E44De85A13de1116
+              </a>
               <div className="container pt-2 pb-4">
                 <div className="row">
                   <div className="col nft-display no-padding">
