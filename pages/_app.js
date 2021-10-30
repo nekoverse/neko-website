@@ -3,7 +3,9 @@ import '../styles/globals.css'
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import { EthSWRConfig } from 'ether-swr'
+
 import { useABIs } from '../hooks/evm'
+import { ProviderDetectorProvider } from '../components/ProviderDetectorContext'
 
 
 function getLibrary(provider) {
@@ -25,15 +27,17 @@ function WalletProvider({ children }) {
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <WalletProvider>
-        <Head>
-          <title>Nekoverse</title>
-          <link rel="icon" href="/favicon.png" />
-        </Head>
-        <Component {...pageProps} />
-      </WalletProvider>
-    </Web3ReactProvider>
+    <ProviderDetectorProvider>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <WalletProvider>
+          <Head>
+            <title>Nekoverse</title>
+            <link rel="icon" href="/favicon.png" />
+          </Head>
+          <Component {...pageProps} />
+        </WalletProvider>
+      </Web3ReactProvider>
+    </ProviderDetectorProvider>
   )
 }
 

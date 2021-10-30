@@ -9,6 +9,7 @@ import useEtherSWR from 'ether-swr'
 
 import { useContractAddresses, useContracts } from '../hooks/evm'
 import { AVALANCHE_CHAIN_ID, FUJI_CHAIN_ID, validChainId } from '../lib/evm'
+import { useHasWeb3Provider } from '../components/ProviderDetectorContext'
 
 export const Networks = {
   Avalanche: AVALANCHE_CHAIN_ID,
@@ -23,6 +24,7 @@ export const injectedConnector = new InjectedConnector({
 })
 
 function Lotto() {
+  const hasWeb3Provider = useHasWeb3Provider()
   const { lotto } = useContractAddresses()
   const { account } = useWeb3React()
   const owner = account
@@ -74,6 +76,7 @@ function Lotto() {
 
 
 function Buy() {
+  const hasWeb3Provider = useHasWeb3Provider()
   const { activate, active, account, library, connector, chainId, error } = useWeb3React()
   const connectWallet = function () {
     activate(injectedConnector)
@@ -160,7 +163,7 @@ function Buy() {
       ) : (
         <>
           {/* TODO: figure out when we can show the "install metamask" message */}
-          {true ? (
+          {hasWeb3Provider ? (
             chainId && !validChainId(chainId) ? (
               <div id="switchNetworkBox1"
                 className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
