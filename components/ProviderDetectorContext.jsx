@@ -12,9 +12,7 @@ export function ProviderDetectorProvider(props) {
   const [hasWeb3Provider, setHasWeb3Provider] = useState()
 
   useEffect(function () {
-    console.log("detecting eth")
     detectEthereumProvider().then(p => {
-      console.log("detected eth", p)
       setWeb3Provider(p);
       setHasWeb3Provider(!!p);
     })
