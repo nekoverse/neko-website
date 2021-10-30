@@ -57,16 +57,19 @@
     max-width: 100%;
     max-height: 100%
   }
-  .socials {
-    height: 55px;
-    width: 100%;
-    display: inline-block;
-  }
   .venues {
     height: 75px;
     width: 180%;
     margin-left: -90px;
     display: inline-block;
+  }
+
+  .social-icon {
+    @apply h-8 w-8;
+  }
+
+  .menu-item {
+    @apply -m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150;
   }
 }
 

@@ -1,15 +1,25 @@
-import { useState, useCallback } from 'react'
+import { useState, Fragment } from 'react'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faDiscord, faTelegramPlane, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Popover, Transition } from '@headlessui/react'
+import Image from 'next/image'
+import nekoLogo from "../public/images/logo_trans_200.png"
+
 import { useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { ethers } from "ethers";
-
 import useEtherSWR from 'ether-swr'
+
 
 import { useContractAddresses, useContracts } from '../hooks/evm'
 import { AVALANCHE_CHAIN_ID, FUJI_CHAIN_ID, validChainId } from '../lib/evm'
 import { useHasWeb3Provider } from '../components/ProviderDetectorContext'
+
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
 
 export const Networks = {
   Avalanche: AVALANCHE_CHAIN_ID,
@@ -162,7 +172,6 @@ function Buy() {
         </>
       ) : (
         <>
-          {/* TODO: figure out when we can show the "install metamask" message */}
           {hasWeb3Provider ? (
             chainId && !validChainId(chainId) ? (
               <div id="switchNetworkBox1"
@@ -208,72 +217,92 @@ export default function Home() {
 
   return (
     <>
-      <header className="container-sm pt-3 position-relative">
-        <div className="pt-2 z-10 absolute top-0 left-0">
-          <div className="pos-f-t">
-            <nav className="navbar">
-              <button className="navbar-toggler h-8 w-8" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-                <FontAwesomeIcon icon={faBars} />
-              </button>
-            </nav>
-            <div className="collapse" id="navbarToggleExternalContent">
-              <div className="p-4">
-                <div><a className="fs-normal" href="#vision">Vision</a></div>
-                <div><a className="fs-normal" href="#lottery">Lotto</a></div>
-                <div><a className="fs-normal" href="#characters">Characters</a></div>
-                <div><a className="fs-normal" href="#art">Art</a></div>
-                <div><a className="fs-normal" href="auction.html">Auction</a></div>
-              </div>
-            </div>
-          </div>
+      <header className="flex flex-row p-4 justify-between">
+        <Popover className="relative">
+          {({ open }) => (
+            <>
+              <Popover.Button
+                className={classNames(
+                  open ? 'text-gray-900' : 'text-gray-800',
+                  'text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+                )}
+              >
+                <FontAwesomeIcon icon={faBars} className="w-8 h-8" />
+              </Popover.Button>
+
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-200"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
+              >
+                <Popover.Panel className="absolute z-10 transform -left-4 mt-3 px-2 w-screen max-w-xs sm:px-0">
+                  <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                    <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                      <a className="fs-normal menu-item" href="#vision">Vision</a>
+                      <a className="fs-normal menu-item" href="#lottery">Lotto</a>
+                      <a className="fs-normal menu-item" href="#characters">Characters</a>
+                      <a className="fs-normal menu-item" href="#art">Art</a>
+                      <a className="fs-normal menu-iem" href="auction.html">Auction</a>
+                    </div>
+                  </div>
+                </Popover.Panel>
+              </Transition>
+            </>
+          )}
+        </Popover>
+        <div className="justify-self-center flex flex-row gap-2">
+          <a href="https://discord.gg/FCfrVDaMTP">
+            <FontAwesomeIcon icon={faDiscord} className="social-icon" title="Discord" />
+          </a>
+          <a href="https://t.me/neko_luckycat_g">
+            <FontAwesomeIcon icon={faTelegramPlane} className="social-icon" title="Telegram" />
+          </a>
+          <a href="https://twitter.com/LuckyCatNEKO1">
+            <FontAwesomeIcon icon={faTwitter} className="social-icon" title="Twitter" />
+          </a>
+          <a href="https://github.com/nekoverse/neko-contracts">
+            <FontAwesomeIcon icon={faGithub} className="social-icon" title="GitHub" />
+          </a>
         </div>
-        <div className="center">
-          <div className="socials">
-            <a href="https://discord.gg/FCfrVDaMTP"><img src="images/discord-icon.png" className="img-max p-1" alt="Discord"></img></a>
-            <a href="https://t.me/neko_luckycat_g"><img src="images/telegram-icon.png" className="img-max p-1" alt="Telegram"></img></a>
-            <a href="https://twitter.com/LuckyCatNEKO1"><img src="images/twitter-icon.png" className="img-max p-1" alt="Twitter"></img></a>
-            <a href="https://github.com/nekoverse/neko-contracts"><img src="images/github-icon.png" className="img-max p-1" alt="Github"></img></a>
-          </div>
-        </div>
-        <div className="dropdown pt-3 z-10 absolute top-0 right-0" >
-          <a className="nav-link dropdown-toggle fs-smaller" href="#" id="navbarDropdownMenuLink78" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span className="flag-icon flag-icon-us text-2xl"></span></a>
+
+        <div className="" >
+          {/* hide i18n for now but keep item there for positioning purposes
+                  <a className="nav-link dropdown-toggle fs-smaller" href="#" id="navbarDropdownMenuLink78" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span className="flag-icon flag-icon-us text-2xl"></span></a>
           <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink78">
             <a className="dropdown-item" href="index.html"><span className="flag-icon flag-icon-us text-2xl"></span> English</a>
             <a className="dropdown-item" href="index.zh.html"><span className="flag-icon flag-icon-cn text-2xl"></span> 汉语</a>
             <a className="dropdown-item" href="index.ru.html"><span className="flag-icon flag-icon-ru text-2xl"></span> Русский</a>
           </div>
+         */}
         </div>
-      </header>
-      <main className="pt-3 pb-5 container-sm">
-        <section id="intro" className="pt-5">
-          <div className="position-relative mr-4">
-            <img src="images/logo_trans_200.png" className="img-fluid mx-auto d-block" alt="Neko Logo"></img>
-          </div>
-          <div className="position-relative pb-3">
-            <h1 className="text-center fs-extra-large">NEKO</h1>
-          </div>
-          <div className="position-relative pb-3">
-            <div className="text-center fs-normal">
-              <p>I bring wealth and good fortune.<br />
-                Buy me to make your wallet lucky.</p>
-            </div>
-          </div>
 
+      </header>
+      <main className="pt-3 pb-5">
+        <section className="pt-5">
+          <div className="max-w-xs mx-auto mb-6">
+            <Image src={nekoLogo} layout="responsive" alt="Neko Logo" />
+          </div>
+          <h1 className="text-center text-5xl mb-6">NEKO</h1>
+          <div className="text-center text-lg fs-normal mb-8">
+            <p className="mb-1">I bring wealth and good fortune.</p>
+            <p>Buy me to make your wallet lucky.</p>
+          </div>
           <div>
             <Buy />
           </div>
 
-          <div className="position-relative pt-3 pb-3">
-            <div className="text-center fs-normal">
-              <p>Total supply: 8,888,888,888,888,888<br />
-                No inflation, No deflation, No tax.</p>
-            </div>
+          <div className="text-center fs-normal my-3">
+            <p>Total supply: 8,888,888,888,888,888<br />
+              No inflation, No deflation, No tax.</p>
           </div>
-          <div className="position-relative pt-3 pb-3">
-            <div className="text-center fs-normal">
-              <p>NEKO contract on Avalanche C-Chain:<br />
-                <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions">0xD9702F5E3b0eb7452967CB82529776D672bdC03F</a></p>
-            </div>
+
+          <div className="text-center fs-normal my-3">
+            <p>NEKO contract on Avalanche C-Chain:<br />
+              <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions">0xD9702F5E3b0eb7452967CB82529776D672bdC03F</a></p>
           </div>
           <br />
           <div className="">
