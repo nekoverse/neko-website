@@ -12,9 +12,7 @@
     font-family: 'Avenir Light';
     src: url("/fonts/avenir-light/avenirltstd-light.otf");
   }
-  * {
-    border-radius: 0 !important;
-  }
+
   header {
     background-color: #F9F9F9;
     font-family: "Avenir Light" !important
@@ -57,16 +55,29 @@
     max-width: 100%;
     max-height: 100%
   }
-  .socials {
-    height: 55px;
-    width: 100%;
-    display: inline-block;
+
+  .btn-lg {
+    @apply px-4 py-2;
   }
-  .venues {
-    height: 75px;
-    width: 180%;
-    margin-left: -90px;
-    display: inline-block;
+
+  .btn-danger {
+    @apply bg-red-600 text-white;
+  }
+
+  .alert-danger {
+    @apply bg-red-200;
+  }
+
+  .social-icon {
+    @apply h-8 w-8;
+  }
+
+  .menu-item {
+    @apply -m-3 p-3 block rounded-md hover:bg-gray-50 transition ease-in-out duration-150;
+  }
+
+  .contract-id {
+    @apply mx-4 block overflow-ellipsis overflow-hidden;
   }
 }
 
@@ -114,7 +125,7 @@
     display: inline-block;
   }
   .action-section {
-    width: 400px;
+    @apply max-w-7xl;
   }
   .left-rounded {
     border-top-left-radius: 24px !important;

@@ -1,68 +1,166 @@
-import Head from 'next/head'
+import { useState, Fragment } from 'react'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { faDiscord, faTelegramPlane, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Popover, Transition } from '@headlessui/react'
+import Image from 'next/image'
+import nekoLogo from "../public/images/logo_trans_200.png"
+
+import { useWeb3React } from '@web3-react/core'
+import { InjectedConnector } from '@web3-react/injected-connector'
+import { ethers } from "ethers";
+import useEtherSWR from 'ether-swr'
 
 
+import { useContractAddresses, useContracts } from '../hooks/evm'
+import { AVALANCHE_CHAIN_ID, FUJI_CHAIN_ID, validChainId } from '../lib/evm'
+import { useHasWeb3Provider } from '../components/ProviderDetectorContext'
 
-export default function Home() {
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
+export const Networks = {
+  Avalanche: AVALANCHE_CHAIN_ID,
+  Fuji: FUJI_CHAIN_ID
+}
+
+export const injectedConnector = new InjectedConnector({
+  supportedChainIds: [
+    Networks.Avalanche,// Avalanche
+    Networks.Fuji
+  ]
+})
+
+function Lotto() {
+  const hasWeb3Provider = useHasWeb3Provider()
+  const { lotto } = useContractAddresses()
+  const { account } = useWeb3React()
+  const owner = account
+  const { data: lottoDeposit } = useEtherSWR(owner ? [lotto, 'depositOf', owner] : [])
   return (
     <>
-      <Head>
-        <title>Nekoverse</title>
-        <link rel="icon" href="/favicon.png" />
-      </Head>
-      <header className="container-sm pt-3 position-relative">
-        <div className="pt-2 z-10 absolute top-0 left-0">
-          <div className="pos-f-t">
-            <nav className="navbar">
-              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-              <FontAwesomeIcon icon={faBars} />
-              </button>
-            </nav>
-            <div className="collapse" id="navbarToggleExternalContent">
-              <div className="p-4">
-                <div><a className="fs-normal" href="#vision">Vision</a></div>
-                <div><a className="fs-normal" href="#lottery">Lotto</a></div>
-                <div><a className="fs-normal" href="#characters">Characters</a></div>
-                <div><a className="fs-normal" href="#art">Art</a></div>
-                <div><a className="fs-normal" href="auction.html">Auction</a></div>
-              </div>
-            </div>
+      <div id="buyLottoTicket"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <div className="text-center fs-smaller">
+          Enter the lotto with NEKO
+        </div>
+        <div className="pt-3 pb-3">
+          <div className="input-group input-group-lg mb-3 pl-4 pr-4">
+            <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
+            <span className="input-group-text">B</span>
+            <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
           </div>
         </div>
-        <div className="center">
-          <div className="socials">
-            <a href="https://discord.gg/FCfrVDaMTP"><img src="images/discord-icon.png" className="img-max p-1" alt="Discord"></img></a>
-            <a href="https://t.me/neko_luckycat_g"><img src="images/telegram-icon.png" className="img-max p-1" alt="Telegram"></img></a>
-            <a href="https://twitter.com/LuckyCatNEKO1"><img src="images/twitter-icon.png" className="img-max p-1" alt="Twitter"></img></a>
-            <a href="https://github.com/nekoverse/neko-contracts"><img src="images/github-icon.png" className="img-max p-1" alt="Github"></img></a>
-          </div>
+      </div>
+      <div id="alreadyBought"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <div className="text-center fs-smaller">
+          You are in this draw already.
         </div>
-        <div className="dropdown pt-3 z-10 absolute top-0 right-0" >
-          <a className="nav-link dropdown-toggle fs-smaller" href="#" id="navbarDropdownMenuLink78" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span className="flag-icon flag-icon-us text-2xl"></span></a>
-          <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink78">
-            <a className="dropdown-item" href="index.html"><span className="flag-icon flag-icon-us text-2xl"></span> English</a>
-            <a className="dropdown-item" href="index.zh.html"><span className="flag-icon flag-icon-cn text-2xl"></span> 汉语</a>
-            <a className="dropdown-item" href="index.ru.html"><span className="flag-icon flag-icon-ru text-2xl"></span> Русский</a>
-          </div>
+        <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
+          {lottoDeposit && String(lottoDeposit.toString() / 10 ** 17)}B
         </div>
-      </header>
-      <main className="pt-3 pb-5 container-sm">
-        <section id="intro" className="pt-5">
-          <div className="position-relative mr-4">
-            <img src="images/logo_trans_200.png" className="img-fluid mx-auto d-block" alt="Neko Logo"></img>
-          </div>
-          <div className="position-relative pb-3">
-            <h1 className="text-center fs-extra-large">NEKO</h1>
-          </div>
-          <div className="position-relative pb-3">
-            <div className="text-center fs-normal">
-              <p>I bring wealth and good fortune.<br />
-                Buy me to make your wallet lucky.</p>
-            </div>
-          </div>
+      </div>
+      <div id="lottoStatus"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <h5>DRAW #<span id="drawNo">x</span></h5>
+        <div className="row fs-normal">
+          <div className="col-9">Entries:</div>
+          <div id="entries" className="col">x</div>
+        </div>
+        <div className="row fs-normal">
+          <div className="col-9">Total so far:</div>
+          <div id="totalSoFar" className="col">x</div>
+        </div>
+        <div className="row fs-normal">
+          <div className="col-9">Max deposit:</div>
+          <div id="maxDeposit" className="col">x</div>
+        </div>
+      </div>
+    </>
+  )
+}
 
-          <div>
+
+
+function Buy() {
+  const hasWeb3Provider = useHasWeb3Provider()
+  const { activate, active, account, library, connector, chainId, error } = useWeb3React()
+  const connectWallet = function () {
+    activate(injectedConnector)
+  }
+  const { shop } = useContracts()
+  const [buying, setBuying] = useState(false)
+  function buyNeko(rawAmount) {
+    if (rawAmount == '0.08' || rawAmount == '0.8' || rawAmount == '8.0') {
+      const amount = ethers.utils.parseUnits(rawAmount, 'ether');
+      shop.buy({ value: amount, gasLimit: 250000 })
+        .then(tx => {
+          console.log("Buy transaction submitted");
+          setBuying(true)
+          return tx.wait();
+        })
+        .then(res => {
+          setBuying(false)
+          console.log("Buy transaction success");
+        })
+        .catch(err => {
+          setBuying(false)
+          console.error(err);
+          // TODO: communicate this to the user
+        })
+    } else {
+      console.error('Unexpected amount:', rawAmount);
+    }
+  }
+
+  return (
+    <>
+      {active ? (
+        <>
+          {account ? (
+            buying ? (
+              <div id="buying1"
+                className="action-section position-relative mx-auto d-none">
+                <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Please wait"></img>
+                <div className="text-center">
+                  Getting your NEKOs<br />Please wait and don't refresh the page.
+                </div>
+              </div>
+            ) : (
+              <div id="buyNekoBox"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-primary mx-auto">
+                <div className="text-center fs-smaller">
+                  Buy me with AVAX
+                </div>
+                <div className="pt-3 pb-3">
+                  <div className="d-flex justify-content-center">
+                    <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Buy me">
+                      <button type="button" className="buy btn btn-primary left-rounded"
+                        onClick={() => buyNeko("0.08")}>
+                        0.08
+                      </button>
+                      <button type="button" className="buy btn btn-primary"
+                        onClick={() => buyNeko("0.8")}>
+                        0.8
+                      </button>
+                      <button type="button" className="buy btn btn-primary right-rounded"
+                        onClick={() => buyNeko("8")}>
+                        8.0
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-center">(pick how many AVAX worth you want)</div>
+                </div>
+                <div className="text-center fs-smaller pb-2">OR</div>
+                <div className="text-center">
+                  <a id="add-link" href="" className="fs-smaller">Add me to your wallet for later</a>
+                </div>
+              </div>
+            )
+          ) : (
             <div id="loading1"
               className="action-section position-relative mx-auto">
               <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Loading"></img>
@@ -70,33 +168,32 @@ export default function Home() {
                 If I don't dissappear soon, <br />refresh the page
               </div>
             </div>
-            <div id="buying1"
-              className="action-section position-relative mx-auto d-none">
-              <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Please wait"></img>
-              <div className="text-center">
-                Getting your NEKOs<br />Please wait and don't refresh the page.
-              </div>
-            </div>
-            <div id="buyNekoBox"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-primary mx-auto">
-              <div className="text-center fs-smaller">
-                Buy me with AVAX
-              </div>
-              <div className="pt-3 pb-3">
-                <div className="d-flex justify-content-center">
-                  <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Buy me">
-                    <button type="button" className="buy btn btn-primary left-rounded" data-amount="0.08">0.08</button>
-                    <button type="button" className="buy btn btn-primary" data-amount="0.8">0.8</button>
-                    <button type="button" className="buy btn btn-primary right-rounded" data-amount="8.0">8.0</button>
-                  </div>
+          )}
+        </>
+      ) : (
+        <>
+          {hasWeb3Provider ? (
+            chainId && !validChainId(chainId) ? (
+              <div id="switchNetworkBox1"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  NEKOs live on Avalanche.<br /> Switch the network.
                 </div>
-                <div className="text-center">(pick how many AVAX worth you want)</div>
+                <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
               </div>
-              <div className="text-center fs-smaller pb-2">OR</div>
-              <div className="text-center">
-                <a id="add-link" href="" className="fs-smaller">Add me to your wallet for later</a>
+            ) : (
+              <div
+                className="relative pt-3 pb-3 text-center alert alert-danger mx-auto">
+                <div className="pb-3 fs-smaller" role="alert">
+                  Connect your wallet to get your NEKOs.
+                </div>
+                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-full"
+                  onClick={connectWallet}>
+                  Connect Wallet
+                </button>
               </div>
-            </div>
+            )
+          ) : (
             <div id="installMetamaskBox1"
               className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
               <div className="text-center pb-3 fs-smaller" role="alert">
@@ -104,33 +201,112 @@ export default function Home() {
               </div>
               <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
             </div>
-            <div id="connectWalletBox1"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-              <div className="text-center pb-3 fs-smaller" role="alert">
-                Connect your wallet to get your NEKOs.
-              </div>
-              <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Connect Wallet</button>
-            </div>
-            <div id="switchNetworkBox1"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-              <div className="text-center pb-3 fs-smaller" role="alert">
-                NEKOs live on Avalanche.<br /> Switch the network.
-              </div>
-              <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
-            </div>
+          )
+          }
+        </>
+      )}
+    </>
+  )
+}
+
+export default function Home() {
+  const { activate, active } = useWeb3React()
+  const connectWallet = function () {
+    activate(injectedConnector)
+  }
+
+  return (
+    <>
+      <header className="flex flex-row p-4 justify-between">
+        <Popover className="relative">
+          {({ open }) => (
+            <>
+              <Popover.Button
+                className={classNames(
+                  open ? 'text-gray-900' : 'text-gray-800',
+                  'text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
+                )}
+              >
+                <FontAwesomeIcon icon={faBars} className="w-8 h-8" />
+              </Popover.Button>
+
+              <Transition
+                as={Fragment}
+                enter="transition ease-out duration-200"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
+              >
+                <Popover.Panel className="absolute z-10 transform -left-4 mt-3 px-2 w-screen max-w-xs sm:px-0">
+                  <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
+                    <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
+                      <a className="fs-normal menu-item" href="#vision">Vision</a>
+                      <a className="fs-normal menu-item" href="#lottery">Lotto</a>
+                      <a className="fs-normal menu-item" href="#characters">Characters</a>
+                      <a className="fs-normal menu-item" href="#art">Art</a>
+                      <a className="fs-normal menu-iem" href="auction.html">Auction</a>
+                    </div>
+                  </div>
+                </Popover.Panel>
+              </Transition>
+            </>
+          )}
+        </Popover>
+        <div className="justify-self-center flex flex-row gap-2">
+          <a href="https://discord.gg/FCfrVDaMTP">
+            <FontAwesomeIcon icon={faDiscord} className="social-icon" title="Discord" />
+          </a>
+          <a href="https://t.me/neko_luckycat_g">
+            <FontAwesomeIcon icon={faTelegramPlane} className="social-icon" title="Telegram" />
+          </a>
+          <a href="https://twitter.com/LuckyCatNEKO1">
+            <FontAwesomeIcon icon={faTwitter} className="social-icon" title="Twitter" />
+          </a>
+          <a href="https://github.com/nekoverse/neko-contracts">
+            <FontAwesomeIcon icon={faGithub} className="social-icon" title="GitHub" />
+          </a>
+        </div>
+
+        <div className="" >
+          {/* hide i18n for now but keep item there for positioning purposes
+                  <a className="nav-link dropdown-toggle fs-smaller" href="#" id="navbarDropdownMenuLink78" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span className="flag-icon flag-icon-us text-2xl"></span></a>
+          <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink78">
+            <a className="dropdown-item" href="index.html"><span className="flag-icon flag-icon-us text-2xl"></span> English</a>
+            <a className="dropdown-item" href="index.zh.html"><span className="flag-icon flag-icon-cn text-2xl"></span> 汉语</a>
+            <a className="dropdown-item" href="index.ru.html"><span className="flag-icon flag-icon-ru text-2xl"></span> Русский</a>
+          </div>
+         */}
+        </div>
+
+      </header>
+      <main className="p-4">
+        <section className="pt-5">
+          <div className="max-w-xs mx-auto mb-6">
+            <Image src={nekoLogo} layout="responsive" alt="Neko Logo" />
+          </div>
+          <h1 className="text-center text-5xl mb-6">NEKO</h1>
+          <div className="text-center text-lg fs-normal mb-8">
+            <p className="mb-1">I bring wealth and good fortune.</p>
+            <p>Buy me to make your wallet lucky.</p>
+          </div>
+          <div>
+            <Buy />
           </div>
 
-          <div className="position-relative pt-3 pb-3">
-            <div className="text-center fs-normal">
-              <p>Total supply: 8,888,888,888,888,888<br />
-                No inflation, No deflation, No tax.</p>
-            </div>
+          <div className="text-center fs-normal my-4">
+            <p>Total supply: 8,888,888,888,888,888<br />
+              No inflation, No deflation, No tax.</p>
           </div>
-          <div className="position-relative pt-3 pb-3">
-            <div className="text-center fs-normal">
-              <p>NEKO contract on Avalanche C-Chain:<br />
-                <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions">0xD9702F5E3b0eb7452967CB82529776D672bdC03F</a></p>
-            </div>
+
+          <div className="text-center fs-normal my-4">
+            <p>NEKO contract on Avalanche C-Chain:<br />
+              <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions"
+                className="contract-id">
+                0xD9702F5E3b0eb7452967CB82529776D672bdC03F
+              </a>
+            </p>
           </div>
           <br />
           <div className="">
@@ -145,17 +321,32 @@ export default function Home() {
           </div>
           <br />
           <div className="position-relative pt-3 pb-3">
-            <div className="text-center fs-normal">
-              <p>NEKO Markets:<br /></p>
-            </div>
-            <div className="center">
-              <div className="venues">
-                <span className="m-1"><a href="https://info.pangolin.exchange/#/token/0xd9702f5e3b0eb7452967cb82529776d672bdc03f"><img src="images/pangolin_logo.svg" className="img-max p-1" alt="Pangolin" /></a></span>
-                <span className="m-1"><a href="https://www.traderjoexyz.com/#/trade"><img src="images/traderjoe_logo.png" className="img-max p-1" alt="Trader Joe" /></a></span>
-                <span className="m-1"><a href="https://nomics.com/assets/neko3-lucky-cat"><img src="images/nomics_logo.png" className="img-max p-1" alt="Nomics" /></a></span>
-                <span className="m-1"><a href="https://swap.olive.cash/#/swap"><img src="images/olive_logo.png" className="img-max p-1" alt="Olive" /></a></span>
-                <span className="m-1"><a href="https://www.livecoinwatch.com/price/LuckyCat-_NEKO"><img src="images/livecoinwatch_logo.png" className="img-max p-1" alt="Olive" /></a></span>
-              </div>
+            <p className="mb-4 text-center text-2xl font-bold">NEKO Markets:</p>
+            <div className="flex flex-row justify-center gap-4">
+              <span className="m-1">
+                <a href="https://info.pangolin.exchange/#/token/0xd9702f5e3b0eb7452967cb82529776d672bdc03f">
+                  <img src="images/pangolin_logo.svg" className="w-8 h-8" alt="Pangolin" />
+                </a>
+              </span>
+              <span className="m-1">
+                <a href="https://www.traderjoexyz.com/#/trade">
+                  <img src="images/traderjoe_logo.png" className="w-8 h-8" alt="Trader Joe" />
+                </a>
+              </span>
+              <span className="m-1">
+                <a href="https://nomics.com/assets/neko3-lucky-cat">
+                  <img src="images/nomics_logo.png" className="w-8 h-8" alt="Nomics" />
+                </a>
+              </span>
+              <span className="m-1"><a href="https://swap.olive.cash/#/swap">
+                <img src="images/olive_logo.png" className="w-8 h-8" alt="Olive" />
+              </a>
+              </span>
+              <span className="m-1">
+                <a href="https://www.livecoinwatch.com/price/LuckyCat-_NEKO">
+                  <img src="images/livecoinwatch_logo.png" className="w-8 h-8" alt="Olive" />
+                </a>
+              </span>
             </div>
           </div>
           <hr />
@@ -206,65 +397,36 @@ export default function Home() {
               You need to approve me, <br />check your MetaMask
             </div>
           </div>
-          <div id="buyLottoTicket"
-            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <div className="text-center fs-smaller">
-              Enter the lotto with NEKO
-            </div>
-            <div className="pt-3 pb-3">
-              <div className="input-group input-group-lg mb-3 pl-4 pr-4">
-                <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
-                <span className="input-group-text">B</span>
-                <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
+          {active ? (
+            <Lotto />
+          ) : (
+            <>
+              <div id="installMetamaskBox2"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  Install MetaMask to get started.
+                </div>
+                <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
               </div>
-            </div>
-          </div>
-          <div id="alreadyBought"
-            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <div className="text-center fs-smaller">
-              You are in this draw already.
-            </div>
-            <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
-              3B
-            </div>
-          </div>
-          <div id="lottoStatus"
-            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <h5>DRAW #<span id="drawNo">x</span></h5>
-            <div className="row fs-normal">
-              <div className="col-9">Entries:</div>
-              <div id="entries" className="col">x</div>
-            </div>
-            <div className="row fs-normal">
-              <div className="col-9">Total so far:</div>
-              <div id="totalSoFar" className="col">x</div>
-            </div>
-            <div className="row fs-normal">
-              <div className="col-9">Max deposit:</div>
-              <div id="maxDeposit" className="col">x</div>
-            </div>
-          </div>
-          <div id="installMetamaskBox2"
-            className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-            <div className="text-center pb-3 fs-smaller" role="alert">
-              Install MetaMask to get started.
-            </div>
-            <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
-          </div>
-          <div id="connectWalletBox2"
-            className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-            <div className="text-center pb-3 fs-smaller" role="alert">
-              Connect your wallet to play the lotto.
-            </div>
-            <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Connect Wallet</button>
-          </div>
-          <div id="switchNetworkBox2"
-            className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-            <div className="text-center pb-3 fs-smaller" role="alert">
-              NEKOs live on Avalanche.<br /> Switch the network.
-            </div>
-            <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
-          </div>
+              <div id="connectWalletBox2"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  Connect your wallet to play the lotto.
+                </div>
+                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
+                  onClick={connectWallet}>
+                  Connect Wallet
+                </button>
+              </div>
+              <div id="switchNetworkBox2"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  NEKOs live on Avalanche.<br /> Switch the network.
+                </div>
+                <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
+              </div>
+            </>
+          )}
           <div className="position-relative pb-3 fs-normal">
             <p className="font-weight-bold">Here is how it works</p>
             <ul>
@@ -280,7 +442,11 @@ export default function Home() {
           <div className="position-relative pt-3 pb-3">
             <div className="text-center fs-normal">
               <p>NEKO Lotto contract on Avalanche C-Chain:<br />
-                <a href="https://cchain.explorer.avax.network/address/0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c/transactions">0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c</a></p>
+                <a href="https://cchain.explorer.avax.network/address/0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c/transactions"
+                  className="contract-id">
+                  0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c
+                </a>
+              </p>
             </div>
           </div >
           <hr />
@@ -384,7 +550,10 @@ export default function Home() {
               </div>
             </div>
             <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D/token-transfers">0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D</a>
+              <a href="https://cchain.explorer.avax.network/tokens/0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D/token-transfers"
+                className="contract-id">
+                0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D
+              </a>
               <div className="container pt-2 pb-4">
                 <div className="row">
                   <div className="col nft-display no-padding">
@@ -425,7 +594,10 @@ export default function Home() {
               </div>
             </div>
             <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211/token-transfers">0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211</a>
+              <a href="https://cchain.explorer.avax.network/tokens/0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211/token-transfers"
+                className="contract-id">
+                0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211
+              </a>
               <div className="container pt-2 pb-4">
                 <div className="row">
                   <div className="col nft-display no-padding">
@@ -466,7 +638,10 @@ export default function Home() {
               </div>
             </div>
             <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0x77dfd577a28A4937559e66F3E44De85A13de1116/token-transfers">0x77dfd577a28A4937559e66F3E44De85A13de1116</a>
+              <a href="https://cchain.explorer.avax.network/tokens/0x77dfd577a28A4937559e66F3E44De85A13de1116/token-transfers"
+                className="contract-id">
+                0x77dfd577a28A4937559e66F3E44De85A13de1116
+              </a>
               <div className="container pt-2 pb-4">
                 <div className="row">
                   <div className="col nft-display no-padding">
