@@ -1,26 +1,29 @@
-import {useCallback} from 'react'
+import { useState, useCallback } from 'react'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
+import { ethers } from "ethers";
 
 import useEtherSWR from 'ether-swr'
 
-import { useContracts } from '../hooks/evm'
+import { useContractAddresses, useContracts } from '../hooks/evm'
+import { AVALANCHE_CHAIN_ID, FUJI_CHAIN_ID, validChainId } from '../lib/evm'
 
 export const Networks = {
-  Avalanche: 43114,
-  Fuji: 43113
+  Avalanche: AVALANCHE_CHAIN_ID,
+  Fuji: FUJI_CHAIN_ID
 }
 
 export const injectedConnector = new InjectedConnector({
   supportedChainIds: [
-    Networks.Avalanche // Avalanche
+    Networks.Avalanche,// Avalanche
+    Networks.Fuji
   ]
 })
 
 function Lotto() {
-  const { lotto } = useContracts()
+  const { lotto } = useContractAddresses()
   const { account } = useWeb3React()
   const owner = account
   const { data: lottoDeposit } = useEtherSWR(owner ? [lotto, 'depositOf', owner] : [])
@@ -45,7 +48,7 @@ function Lotto() {
           You are in this draw already.
         </div>
         <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
-          {lottoDeposit && String(lottoDeposit.toString() / 10**17)}B
+          {lottoDeposit && String(lottoDeposit.toString() / 10 ** 17)}B
         </div>
       </div>
       <div id="lottoStatus"
@@ -64,6 +67,132 @@ function Lotto() {
           <div id="maxDeposit" className="col">x</div>
         </div>
       </div>
+    </>
+  )
+}
+
+
+
+function Buy() {
+  const { activate, active, account, library, connector, chainId, error } = useWeb3React()
+  const connectWallet = function () {
+    activate(injectedConnector)
+  }
+  const { shop } = useContracts()
+  const [buying, setBuying] = useState(false)
+  function buyNeko(rawAmount) {
+    if (rawAmount == '0.08' || rawAmount == '0.8' || rawAmount == '8.0') {
+      const amount = ethers.utils.parseUnits(rawAmount, 'ether');
+      shop.buy({ value: amount, gasLimit: 250000 })
+        .then(tx => {
+          console.log("Buy transaction submitted");
+          setBuying(true)
+          return tx.wait();
+        })
+        .then(res => {
+          setBuying(false)
+          console.log("Buy transaction success");
+        })
+        .catch(err => {
+          setBuying(false)
+          console.error(err);
+          // TODO: communicate this to the user
+        })
+    } else {
+      console.error('Unexpected amount:', rawAmount);
+    }
+  }
+
+  return (
+    <>
+      {active ? (
+        <>
+          {account ? (
+            buying ? (
+              <div id="buying1"
+                className="action-section position-relative mx-auto d-none">
+                <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Please wait"></img>
+                <div className="text-center">
+                  Getting your NEKOs<br />Please wait and don't refresh the page.
+                </div>
+              </div>
+            ) : (
+              <div id="buyNekoBox"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-primary mx-auto">
+                <div className="text-center fs-smaller">
+                  Buy me with AVAX
+                </div>
+                <div className="pt-3 pb-3">
+                  <div className="d-flex justify-content-center">
+                    <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Buy me">
+                      <button type="button" className="buy btn btn-primary left-rounded"
+                        onClick={() => buyNeko("0.08")}>
+                        0.08
+                      </button>
+                      <button type="button" className="buy btn btn-primary"
+                        onClick={() => buyNeko("0.8")}>
+                        0.8
+                      </button>
+                      <button type="button" className="buy btn btn-primary right-rounded"
+                        onClick={() => buyNeko("8")}>
+                        8.0
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-center">(pick how many AVAX worth you want)</div>
+                </div>
+                <div className="text-center fs-smaller pb-2">OR</div>
+                <div className="text-center">
+                  <a id="add-link" href="" className="fs-smaller">Add me to your wallet for later</a>
+                </div>
+              </div>
+            )
+          ) : (
+            <div id="loading1"
+              className="action-section position-relative mx-auto">
+              <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Loading"></img>
+              <div className="text-center">
+                If I don't dissappear soon, <br />refresh the page
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {/* TODO: figure out when we can show the "install metamask" message */}
+          {true ? (
+            chainId && !validChainId(chainId) ? (
+              <div id="switchNetworkBox1"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  NEKOs live on Avalanche.<br /> Switch the network.
+                </div>
+                <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
+              </div>
+            ) : (
+              <div id="connectWalletBox1"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  Connect your wallet to get your NEKOs.
+                </div>
+                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
+                  onClick={connectWallet}>
+                  Connect Wallet
+                </button>
+              </div>
+            )
+          ) : (
+            <div id="installMetamaskBox1"
+              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+              <div className="text-center pb-3 fs-smaller" role="alert">
+                Install MetaMask to get started.
+              </div>
+              <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
+            </div>
+          )
+          }
+        </>
+      )}
     </>
   )
 }
@@ -128,64 +257,7 @@ export default function Home() {
           </div>
 
           <div>
-            <div id="loading1"
-              className="action-section position-relative mx-auto">
-              <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Loading"></img>
-              <div className="text-center">
-                If I don't dissappear soon, <br />refresh the page
-              </div>
-            </div>
-            <div id="buying1"
-              className="action-section position-relative mx-auto d-none">
-              <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Please wait"></img>
-              <div className="text-center">
-                Getting your NEKOs<br />Please wait and don't refresh the page.
-              </div>
-            </div>
-            <div id="buyNekoBox"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-primary mx-auto">
-              <div className="text-center fs-smaller">
-                Buy me with AVAX
-              </div>
-              <div className="pt-3 pb-3">
-                <div className="d-flex justify-content-center">
-                  <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Buy me">
-                    <button type="button" className="buy btn btn-primary left-rounded" data-amount="0.08">0.08</button>
-                    <button type="button" className="buy btn btn-primary" data-amount="0.8">0.8</button>
-                    <button type="button" className="buy btn btn-primary right-rounded" data-amount="8.0">8.0</button>
-                  </div>
-                </div>
-                <div className="text-center">(pick how many AVAX worth you want)</div>
-              </div>
-              <div className="text-center fs-smaller pb-2">OR</div>
-              <div className="text-center">
-                <a id="add-link" href="" className="fs-smaller">Add me to your wallet for later</a>
-              </div>
-            </div>
-            <div id="installMetamaskBox1"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-              <div className="text-center pb-3 fs-smaller" role="alert">
-                Install MetaMask to get started.
-              </div>
-              <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
-            </div>
-            <div id="connectWalletBox1"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-              <div className="text-center pb-3 fs-smaller" role="alert">
-                Connect your wallet to get your NEKOs.
-              </div>
-              <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
-                onClick={connectWallet}>
-                Connect Wallet
-              </button>
-            </div>
-            <div id="switchNetworkBox1"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-              <div className="text-center pb-3 fs-smaller" role="alert">
-                NEKOs live on Avalanche.<br /> Switch the network.
-              </div>
-              <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
-            </div>
+            <Buy />
           </div>
 
           <div className="position-relative pt-3 pb-3">
