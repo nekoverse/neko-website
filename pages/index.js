@@ -1,22 +1,87 @@
-import Head from 'next/head'
+import {useCallback} from 'react'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
+import { InjectedConnector } from '@web3-react/injected-connector'
 
+import useEtherSWR from 'ether-swr'
 
+import { useContracts } from '../hooks/evm'
 
-export default function Home() {
+export const Networks = {
+  Avalanche: 43114,
+  Fuji: 43113
+}
+
+export const injectedConnector = new InjectedConnector({
+  supportedChainIds: [
+    Networks.Avalanche // Avalanche
+  ]
+})
+
+function Lotto() {
+  const { lotto } = useContracts()
+  const { account } = useWeb3React()
+  const owner = account
+  const { data: lottoDeposit } = useEtherSWR(owner ? [lotto, 'depositOf', owner] : [])
   return (
     <>
-      <Head>
-        <title>Nekoverse</title>
-        <link rel="icon" href="/favicon.png" />
-      </Head>
+      <div id="buyLottoTicket"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <div className="text-center fs-smaller">
+          Enter the lotto with NEKO
+        </div>
+        <div className="pt-3 pb-3">
+          <div className="input-group input-group-lg mb-3 pl-4 pr-4">
+            <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
+            <span className="input-group-text">B</span>
+            <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
+          </div>
+        </div>
+      </div>
+      <div id="alreadyBought"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <div className="text-center fs-smaller">
+          You are in this draw already.
+        </div>
+        <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
+          {lottoDeposit && String(lottoDeposit.toString() / 10**17)}B
+        </div>
+      </div>
+      <div id="lottoStatus"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <h5>DRAW #<span id="drawNo">x</span></h5>
+        <div className="row fs-normal">
+          <div className="col-9">Entries:</div>
+          <div id="entries" className="col">x</div>
+        </div>
+        <div className="row fs-normal">
+          <div className="col-9">Total so far:</div>
+          <div id="totalSoFar" className="col">x</div>
+        </div>
+        <div className="row fs-normal">
+          <div className="col-9">Max deposit:</div>
+          <div id="maxDeposit" className="col">x</div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+export default function Home() {
+  const { activate, active } = useWeb3React()
+  const connectWallet = function () {
+    activate(injectedConnector)
+  }
+
+  return (
+    <>
       <header className="container-sm pt-3 position-relative">
         <div className="pt-2 z-10 absolute top-0 left-0">
           <div className="pos-f-t">
             <nav className="navbar">
-              <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
-              <FontAwesomeIcon icon={faBars} />
+              <button className="navbar-toggler h-8 w-8" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+                <FontAwesomeIcon icon={faBars} />
               </button>
             </nav>
             <div className="collapse" id="navbarToggleExternalContent">
@@ -109,7 +174,10 @@ export default function Home() {
               <div className="text-center pb-3 fs-smaller" role="alert">
                 Connect your wallet to get your NEKOs.
               </div>
-              <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Connect Wallet</button>
+              <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
+                onClick={connectWallet}>
+                Connect Wallet
+              </button>
             </div>
             <div id="switchNetworkBox1"
               className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
@@ -206,65 +274,36 @@ export default function Home() {
               You need to approve me, <br />check your MetaMask
             </div>
           </div>
-          <div id="buyLottoTicket"
-            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <div className="text-center fs-smaller">
-              Enter the lotto with NEKO
-            </div>
-            <div className="pt-3 pb-3">
-              <div className="input-group input-group-lg mb-3 pl-4 pr-4">
-                <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
-                <span className="input-group-text">B</span>
-                <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
+          {active ? (
+            <Lotto />
+          ) : (
+            <>
+              <div id="installMetamaskBox2"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  Install MetaMask to get started.
+                </div>
+                <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
               </div>
-            </div>
-          </div>
-          <div id="alreadyBought"
-            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <div className="text-center fs-smaller">
-              You are in this draw already.
-            </div>
-            <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
-              3B
-            </div>
-          </div>
-          <div id="lottoStatus"
-            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <h5>DRAW #<span id="drawNo">x</span></h5>
-            <div className="row fs-normal">
-              <div className="col-9">Entries:</div>
-              <div id="entries" className="col">x</div>
-            </div>
-            <div className="row fs-normal">
-              <div className="col-9">Total so far:</div>
-              <div id="totalSoFar" className="col">x</div>
-            </div>
-            <div className="row fs-normal">
-              <div className="col-9">Max deposit:</div>
-              <div id="maxDeposit" className="col">x</div>
-            </div>
-          </div>
-          <div id="installMetamaskBox2"
-            className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-            <div className="text-center pb-3 fs-smaller" role="alert">
-              Install MetaMask to get started.
-            </div>
-            <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
-          </div>
-          <div id="connectWalletBox2"
-            className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-            <div className="text-center pb-3 fs-smaller" role="alert">
-              Connect your wallet to play the lotto.
-            </div>
-            <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Connect Wallet</button>
-          </div>
-          <div id="switchNetworkBox2"
-            className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-            <div className="text-center pb-3 fs-smaller" role="alert">
-              NEKOs live on Avalanche.<br /> Switch the network.
-            </div>
-            <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
-          </div>
+              <div id="connectWalletBox2"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  Connect your wallet to play the lotto.
+                </div>
+                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
+                  onClick={connectWallet}>
+                  Connect Wallet
+                </button>
+              </div>
+              <div id="switchNetworkBox2"
+                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  NEKOs live on Avalanche.<br /> Switch the network.
+                </div>
+                <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
+              </div>
+            </>
+          )}
           <div className="position-relative pb-3 fs-normal">
             <p className="font-weight-bold">Here is how it works</p>
             <ul>
