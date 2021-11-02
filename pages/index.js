@@ -33,52 +33,112 @@ export const injectedConnector = new InjectedConnector({
   ]
 })
 
-function Lotto() {
-  const hasWeb3Provider = useHasWeb3Provider()
+function LottoDeposit({ account }) {
   const { lotto } = useContractAddresses()
-  const { account } = useWeb3React()
-  const owner = account
-  const { data: lottoDeposit } = useEtherSWR(owner ? [lotto, 'depositOf', owner] : [])
+  const { data: lottoDeposit } = useEtherSWR(account ? [lotto, 'depositOf', account] : [])
   return (
     <>
-      <div id="buyLottoTicket"
-        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-        <div className="text-center fs-smaller">
-          Enter the lotto with NEKO
-        </div>
-        <div className="pt-3 pb-3">
-          <div className="input-group input-group-lg mb-3 pl-4 pr-4">
-            <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
-            <span className="input-group-text">B</span>
-            <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
-          </div>
-        </div>
-      </div>
-      <div id="alreadyBought"
-        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-        <div className="text-center fs-smaller">
-          You are in this draw already.
-        </div>
-        <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
-          {lottoDeposit && String(lottoDeposit.toString() / 10 ** 17)}B
-        </div>
-      </div>
-      <div id="lottoStatus"
-        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-        <h5>DRAW #<span id="drawNo">x</span></h5>
-        <div className="row fs-normal">
-          <div className="col-9">Entries:</div>
-          <div id="entries" className="col">x</div>
-        </div>
-        <div className="row fs-normal">
-          <div className="col-9">Total so far:</div>
-          <div id="totalSoFar" className="col">x</div>
-        </div>
-        <div className="row fs-normal">
-          <div className="col-9">Max deposit:</div>
-          <div id="maxDeposit" className="col">x</div>
-        </div>
-      </div>
+      {lottoDeposit && String(lottoDeposit.toString() / 10 ** 17)}B
+    </>
+  )
+
+}
+
+function Lotto() {
+  const hasWeb3Provider = useHasWeb3Provider()
+  const { account, active, chainId } = useWeb3React()
+  const connectWallet = function () {
+    activate(injectedConnector)
+  }
+  return (
+    <>
+      {active ? (
+        <>
+          {account ? (
+            <>
+              <div id="buyLottoTicket"
+                className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+                <div className="text-center fs-smaller">
+                  Enter the lotto with NEKO
+                </div>
+                <div className="pt-3 pb-3">
+                  <div className="input-group input-group-lg mb-3 pl-4 pr-4">
+                    <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
+                    <span className="input-group-text">B</span>
+                    <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
+                  </div>
+                </div>
+              </div>
+              <div id="alreadyBought"
+                className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+                <div className="text-center fs-smaller">
+                  You are in this draw already.
+                </div>
+                <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
+                  <LottoDeposit account={account} />
+                </div>
+              </div>
+              <div id="lottoStatus"
+                className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+                <h5>DRAW #<span id="drawNo">x</span></h5>
+                <div className="row fs-normal">
+                  <div className="col-9">Entries:</div>
+                  <div id="entries" className="col">x</div>
+                </div>
+                <div className="row fs-normal">
+                  <div className="col-9">Total so far:</div>
+                  <div id="totalSoFar" className="col">x</div>
+                </div>
+                <div className="row fs-normal">
+                  <div className="col-9">Max deposit:</div>
+                  <div id="maxDeposit" className="col">x</div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div id="loading2" className="action-section relative mx-auto">
+              <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Loading"></img>
+              <div className="text-center mx-auto">
+                You need to approve me, <br />check your MetaMask
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {hasWeb3Provider ? (
+            (chainId && !validChainId(chainId)) ? (
+              <div id="switchNetworkBox2"
+                className="action-section relative pt-3 pb-3 alert alert-danger mx-auto flex flex-col items-center">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  NEKOs live on Avalanche.<br /> Switch the network.
+                </div>
+                <button className="switch btn btn-lg btn-danger mx-auto rounded-full" type="submit">Switch to Avalanche</button>
+              </div>
+            ) : (
+              <div id="connectWalletBox2"
+                className="action-section position-relative pt-3 pb-3 alert alert-danger mx-auto flex flex-col items-center">
+                <div className="text-center pb-3 fs-smaller" role="alert">
+                  Connect your wallet to play the lotto.
+                </div>
+                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-full"
+                  onClick={connectWallet}>
+                  Connect Wallet
+                </button>
+              </div>
+            )
+          ) : (
+            <div id="installMetamaskBox2"
+              className="action-section position-relative pt-3 pb-3 alert alert-danger mx-auto flex flex-col items-center">
+              <div className="text-center pb-3 fs-smaller" role="alert">
+                Install MetaMask to get started.
+              </div>
+              <button className="install btn btn-lg btn-danger mx-auto rounded-full" type="submit">Install MetaMask</button>
+            </div>
+          )}
+
+        </>
+      )}
     </>
   )
 }
@@ -194,12 +254,13 @@ function Buy() {
               </div>
             )
           ) : (
-            <div id="installMetamaskBox1"
-              className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-              <div className="text-center pb-3 fs-smaller" role="alert">
+            <div className="action-section relative pt-3 pb-3 alert alert-danger mx-auto flex flex-col items-center">
+              <div className="text-center pb-3 text-sm" role="alert">
                 Install MetaMask to get started.
               </div>
-              <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
+              <button className="btn btn-lg btn-danger mx-auto rounded-full">
+                Install MetaMask
+              </button>
             </div>
           )
           }
@@ -381,54 +442,18 @@ export default function Home() {
           <hr />
         </section>
         <section id="lottery" className="pt-5">
-          <div className="position-relative pb-3">
+          <div className="relative pb-3">
             <h2 className="fw-bold text-center text-dark">NEKO LOTTO</h2>
           </div>
-          <div className="position-relative pb-3">
+          <div className="relative pb-3">
             <div className="text-center fs-normal">
               <p>By playing the lotto you help improve NEKO's liquidity.<br />
                 You can also win.</p>
             </div>
           </div>
-          <div id="loading2"
-            className="action-section position-relative mx-auto">
-            <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Loading"></img>
-            <div className="text-center">
-              You need to approve me, <br />check your MetaMask
-            </div>
-          </div>
-          {active ? (
-            <Lotto />
-          ) : (
-            <>
-              <div id="installMetamaskBox2"
-                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-                <div className="text-center pb-3 fs-smaller" role="alert">
-                  Install MetaMask to get started.
-                </div>
-                <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
-              </div>
-              <div id="connectWalletBox2"
-                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-                <div className="text-center pb-3 fs-smaller" role="alert">
-                  Connect your wallet to play the lotto.
-                </div>
-                <button className="connect btn btn-lg btn-danger mx-auto d-block rounded-pill"
-                  onClick={connectWallet}>
-                  Connect Wallet
-                </button>
-              </div>
-              <div id="switchNetworkBox2"
-                className="action-section position-relative pt-3 pb-3 d-none alert alert-danger mx-auto">
-                <div className="text-center pb-3 fs-smaller" role="alert">
-                  NEKOs live on Avalanche.<br /> Switch the network.
-                </div>
-                <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
-              </div>
-            </>
-          )}
-          <div className="position-relative pb-3 fs-normal">
-            <p className="font-weight-bold">Here is how it works</p>
+          <Lotto />
+          <div className="relative pb-3 fs-normal">
+            <p className="font-bold">Here is how it works</p>
             <ul>
               <li>Each draw requires 8 entries.</li>
               <li>You can only enter a draw once.</li>
@@ -439,7 +464,7 @@ export default function Home() {
               <li>Once the winner is chosen the lotto resets and you can enter again.</li>
             </ul>
           </div>
-          <div className="position-relative pt-3 pb-3">
+          <div className="relative pt-3 pb-3">
             <div className="text-center fs-normal">
               <p>NEKO Lotto contract on Avalanche C-Chain:<br />
                 <a href="https://cchain.explorer.avax.network/address/0x73F1E988f6B3f7Cb64986fBcCF4F1a99E740274c/transactions"
