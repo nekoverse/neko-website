@@ -26,6 +26,14 @@ export const Networks = {
   Fuji: FUJI_CHAIN_ID
 }
 
+function formatNeko(value) {
+  return (value.toString() / (10 ** 8))
+}
+
+function formatNekoBillions(value) {
+  return formatNeko(value) / 10 ** 9
+}
+
 export const injectedConnector = new InjectedConnector({
   supportedChainIds: [
     Networks.Avalanche,// Avalanche
@@ -33,20 +41,107 @@ export const injectedConnector = new InjectedConnector({
   ]
 })
 
-function LottoDeposit({ account }) {
-  const { lotto } = useContractAddresses()
-  const { data: lottoDeposit } = useEtherSWR(account ? [lotto, 'depositOf', account] : [])
+function LottoState({ account }) {
+  const { neko: nekoAddr, lotto: lottoAddr } = useContractAddresses()
+  const { data: lottoState } = useEtherSWR(account ? [
+    [lottoAddr, 'depositOf', account],
+    [lottoAddr, 'drawNo'],
+    [lottoAddr, 'playerCount'],
+    [lottoAddr, 'maxAmount'],
+    [lottoAddr, 'totalAmount'],
+    [nekoAddr, 'allowance', account, lottoAddr],
+    [nekoAddr, 'balanceOf', account]
+  ] : [])
+  const [lottoDeposit, drawNo, playerCount, maxDeposit, totalAmount, allowance, nekoBalance] = lottoState ? lottoState : []
+  const [lottoAmount, setLottoAmount] = useState()
+  const { neko, lotto } = useContracts()
+
+  async function approveLottoSpend() {
+    const amountScaled = lottoAmount * 10 ** 9;
+
+    if (!allowance || (allowance < amountScaled)) {
+      const amount = ethers.utils.parseUnits(String(amountScaled), 8)
+      await neko.approve(lottoAddr, amount)
+    }
+  }
+
+  const amountScaled = lottoAmount && lottoAmount * 10 ** 9;
+  const amountStr = amountScaled && String(amountScaled) + "00000000";
+  const amount = amountStr && ethers.BigNumber.from(amountStr);
+
+  async function buyLottoTicket() {
+    await lotto.buyIn(amount)
+  }
   return (
     <>
-      {lottoDeposit && String(lottoDeposit.toString() / 10 ** 17)}B
+      {
+        (lottoDeposit && (lottoDeposit > 0)) ? (
+          <div id="alreadyBought"
+            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+            <div className="text-center fs-smaller">
+              You are in this draw already.
+            </div>
+            <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
+              {formatNekoBillions(lottoDeposit)}B
+            </div>
+          </div>
+        ) : (
+          <div id="buyLottoTicket"
+            className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+            <div className="text-center fs-smaller">
+              Enter the lotto with NEKO
+            </div>
+            <div className="pt-3 pb-3">
+              <div className="input-group input-group-lg mb-3 pl-4 pr-4">
+                <input type="text" className="buyLotto form-control left-rounded"
+                  aria-label="Amount (to the nearest dollar)"
+                  onChange={e => setLottoAmount(e.target.value)} />
+                <span className="input-group-text">B</span>
+                {(!amount || (allowance && (allowance >= amount))) ? (
+                  <button type="button"
+                    onClick={buyLottoTicket}
+                    className="buyLotto btn btn-lg btn-primary right-rounded"
+                    disabled={!amount || !allowance || (allowance <= 0)}>
+                    Buy
+                  </button>
+                ) : (
+                  <button onClick={approveLottoSpend}
+                    className="buyLotto btn btn-lg btn-primary right-rounded">
+                    Approve
+                  </button>
+                )}
+              </div>
+              {(nekoBalance < amount) && <span className="text-red-300">you don't have that many $NEKO!</span>}
+            </div>
+          </div>
+        )
+      }
+
+      <div id="lottoStatus"
+        className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
+        <h5>DRAW #<span id="drawNo">{drawNo && drawNo.toString()}</span></h5>
+        <div className="row fs-normal">
+          <div className="col-9">Entries:</div>
+          <div id="entries" className="col">{playerCount && playerCount.toString()}</div>
+        </div>
+        <div className="row fs-normal">
+          <div className="col-9">Total so far:</div>
+          <div id="totalSoFar" className="col">{totalAmount && formatNekoBillions(totalAmount)}B</div>
+        </div>
+        <div className="row fs-normal">
+          <div className="col-9">Max deposit:</div>
+          <div id="maxDeposit" className="col">{maxDeposit && formatNekoBillions(maxDeposit)}B</div>
+        </div>
+      </div>
     </>
   )
-
 }
+
+
 
 function Lotto() {
   const hasWeb3Provider = useHasWeb3Provider()
-  const { account, active, chainId } = useWeb3React()
+  const { account, active, activate, chainId } = useWeb3React()
   const connectWallet = function () {
     activate(injectedConnector)
   }
@@ -55,46 +150,7 @@ function Lotto() {
       {active ? (
         <>
           {account ? (
-            <>
-              <div id="buyLottoTicket"
-                className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-                <div className="text-center fs-smaller">
-                  Enter the lotto with NEKO
-                </div>
-                <div className="pt-3 pb-3">
-                  <div className="input-group input-group-lg mb-3 pl-4 pr-4">
-                    <input type="text" className="buyLotto form-control left-rounded" aria-label="Amount (to the nearest dollar)" />
-                    <span className="input-group-text">B</span>
-                    <button type="button" className="buyLotto btn btn-lg btn-primary right-rounded">Buy</button>
-                  </div>
-                </div>
-              </div>
-              <div id="alreadyBought"
-                className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-                <div className="text-center fs-smaller">
-                  You are in this draw already.
-                </div>
-                <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
-                  <LottoDeposit account={account} />
-                </div>
-              </div>
-              <div id="lottoStatus"
-                className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-                <h5>DRAW #<span id="drawNo">x</span></h5>
-                <div className="row fs-normal">
-                  <div className="col-9">Entries:</div>
-                  <div id="entries" className="col">x</div>
-                </div>
-                <div className="row fs-normal">
-                  <div className="col-9">Total so far:</div>
-                  <div id="totalSoFar" className="col">x</div>
-                </div>
-                <div className="row fs-normal">
-                  <div className="col-9">Max deposit:</div>
-                  <div id="maxDeposit" className="col">x</div>
-                </div>
-              </div>
-            </>
+            <LottoState account={account} />
           ) : (
             <div id="loading2" className="action-section relative mx-auto">
               <img src="images/loading.gif" className="mx-auto d-block pb-2" alt="Loading"></img>
@@ -197,16 +253,16 @@ function Buy() {
                 </div>
                 <div className="pt-3 pb-3">
                   <div className="d-flex justify-content-center">
-                    <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Buy me">
-                      <button type="button" className="buy btn btn-primary left-rounded"
+                    <div className="btn-group btn-group-lg pb-2 flex flex-row" role="group" aria-label="Buy me">
+                      <button type="button" className="buy btn btn-primary left-rounded ml-4"
                         onClick={() => buyNeko("0.08")}>
                         0.08
                       </button>
-                      <button type="button" className="buy btn btn-primary"
+                      <button type="button" className="buy btn btn-primary ml-4"
                         onClick={() => buyNeko("0.8")}>
                         0.8
                       </button>
-                      <button type="button" className="buy btn btn-primary right-rounded"
+                      <button type="button" className="buy btn btn-primary right-rounded ml-4"
                         onClick={() => buyNeko("8")}>
                         8.0
                       </button>
@@ -363,7 +419,7 @@ export default function Home() {
 
           <div className="text-center fs-normal my-4">
             <p>NEKO contract on Avalanche C-Chain:<br />
-              <a href="https://cchain.explorer.avax.network/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions"
+              <a href="https://snowtrace.io/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions"
                 className="contract-id">
                 0xD9702F5E3b0eb7452967CB82529776D672bdC03F
               </a>
