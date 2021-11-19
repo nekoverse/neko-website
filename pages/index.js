@@ -111,7 +111,7 @@ function LottoState({ account }) {
                   </button>
                 )}
               </div>
-              {(nekoBalance < amount) && <span className="text-red-300">you don't have that many $NEKO!</span>}
+              {(nekoBalance < amount) && <span className="text-red-600">You don't have that many $NEKO!</span>}
             </div>
           </div>
         )
