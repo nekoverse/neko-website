@@ -45,6 +45,19 @@
 }
 
 @layer components {
+
+  .characters {
+    @apply grid grid-cols-1 md:grid-cols-6 gap-2;
+  }
+
+  .char-name {
+    @apply text-center text-2xl font-bold md:col-span-2;
+  }
+
+  .char-desc {
+    @apply text-2xl md:col-span-3;
+  }
+
   #buy-button {
     font-family: "Lulo Clean Bold" !important;
     font-size: 16px;

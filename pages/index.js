@@ -3,14 +3,21 @@ import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { faDiscord, faTelegramPlane, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Popover, Transition } from '@headlessui/react'
+
 import Image from 'next/image'
-import nekoLogo from "../public/images/logo_trans_200.png"
+import Link from 'next/link'
 
 import { useWeb3React } from '@web3-react/core'
 import { InjectedConnector } from '@web3-react/injected-connector'
 import { ethers } from "ethers";
 import useEtherSWR from 'ether-swr'
 
+import nekoLogo from "../public/images/logo_trans_200.png"
+import ultra64Gif from "../public/images/ultra64-promo.gif"
+import nekoImage from "../public/images/neko.png"
+import rebelImage from "../public/images/rebel.png"
+import squareImage from "../public/images/square.png"
+import quickyImage from "../public/images/ball.png"
 
 import { useContractAddresses, useContracts } from '../hooks/evm'
 import { AVALANCHE_CHAIN_ID, FUJI_CHAIN_ID, validChainId } from '../lib/evm'
@@ -427,13 +434,15 @@ export default function Home() {
           </div>
           <br />
           <div className="">
-            <div className="text-center fs-normal">
-              <a href="auction.html">
-                <img src="images/ultra64-promo.gif" alt="Neko Logo"></img>
-                <div className="fs-large ff-lulo">Ultra 64</div>
-                <div><b>NFT Collection</b></div>
-                <div><i>On Sale Now!</i></div>
-              </a>
+            <div className="text-center m-auto">
+              <Link href="">
+                <a>
+                  <Image src={ultra64Gif} alt="Neko Logo"></Image>
+                  <div className="fs-large ff-lulo">Ultra 64</div>
+                  <div className=""><b>NFT Collection</b></div>
+                  <div><i>On Sale Now!</i></div>
+                </a>
+              </Link>
             </div>
           </div>
           <br />
@@ -471,7 +480,7 @@ export default function Home() {
         <section id="vision" className="pt-5">
           <div className="row pb-3">
             <div className="col-3">
-              <h4>VISION</h4>
+              <h4 className="text-3xl">VISION</h4>
             </div>
             <div className="col w-75 fs-normal">
               <p>NEKO is the main character of a brand new world, a world of optimism and good luck.</p>
@@ -480,7 +489,7 @@ export default function Home() {
           </div>
           <div className="row pb-3">
             <div className="col-3">
-              <h4>NEKOVERSE</h4>
+              <h4 className="text-3xl">NEKOVERSE</h4>
             </div>
             <div className="col w-75 fs-normal">
               <img src="images/world.jpg" className="img-max" alt="Nekoverse" />
@@ -488,7 +497,7 @@ export default function Home() {
           </div>
           <div className="row pb-3">
             <div className="col-3">
-              <h4>ROADMAP</h4>
+              <h4 className="text-3xl">ROADMAP</h4>
             </div>
             <div className="col w-75 fs-normal">
               <p>There isn't one. Nekoverse will grow organically and randomly. It will go in strange directions that at times might not make sense but, in the end, everything will come together.</p>
@@ -534,77 +543,47 @@ export default function Home() {
         </section >
         <section id="characters" className="pt-5">
           <div className="position-relative pb-3">
-            <h2 className="fw-bold text-center text-dark">NEKO CHARACTERS</h2>
+            <h2 className="text-3xl fw-bold text-center text-dark mb-4">NEKO CHARACTERS</h2>
           </div>
-          <div className="position-relative pb-3">
+          <div className="relative pb-3 mb-4">
             <div className="text-center fs-normal">
               <p>Meet NEKO characters!</p>
             </div>
           </div>
-          <div className="row">
-            <div className="col-3">
-              <div className="inline-block">
-                <h4 className="absolute">NEKO</h4>
-              </div>
+          <div className="characters">
+            <h4 className="char-name">NEKO</h4>
+            <div className="text-lg">
+              <Image src={nekoImage} className="img-profile" alt="Neko" />
             </div>
-            <div className="col-2 fs-normal">
-              <img src="images/neko.png" className="img-profile" alt="Neko" />
-            </div>
-            <div className="col w-75 fs-normal">
+            <div className="char-desc">
               <p>Neko is the main protagonist of Nekoverse.</p>
               <p>Everyone loves Neko and Neko loves them all back. Neko is cute, fluffy, lucky kitty that wants to make the world a better place. </p>
             </div>
-          </div>
-          <br />
-          <br />
-          <div className="row">
-            <div className="col-3">
-              <div className="inline-block">
-                <h4 className="absolute">REBEL</h4>
-              </div>
+            <h4 className="char-name">REBEL</h4>
+            <div className="text-lg">
+              <Image src={rebelImage} className="img-profile" alt="Rebel" />
             </div>
-            <div className="col-2 fs-normal">
-              <img src="images/rebel.png" className="img-profile" alt="Rebel" />
-            </div>
-            <div className="col w-75 fs-normal">
+            <div className="char-desc">
               <p>Rebel is the "bad boy" of Nekoverse.</p>
               <p>Rebel is everything Neko is not. He never misses an opportunity to harm Neko, but it almost never works and Neko never holds a grudge.  </p>
             </div>
-          </div>
-          <br />
-          <br />
-          <div className="row">
-            <div className="col-3">
-              <div className="inline-block">
-                <h4 className="absolute">SQUARE</h4>
-              </div>
+            <h4 className="char-name">SQUARE</h4>
+            <div className="text-lg">
+              <Image src={squareImage} className="img-profile" alt="Rebel" />
             </div>
-            <div className="col-2 fs-normal">
-              <img src="images/square.png" className="img-profile" alt="Rebel" />
-            </div>
-            <div className="col w-75 fs-normal">
+            <div className="char-desc">
               <p>Square is "Mr. Right" of Nekoverse.</p>
               <p>Square likes to follow rules. He notices and reports everyone who breaks them. This naturally puts him against Rebel who tries to hide his activities from Square.   </p>
             </div>
-          </div>
-          <br />
-          <br />
-          <div className="row">
-            <div className="col-3">
-              <div className="inline-block">
-                <h4 className="absolute">QUICKY</h4>
-              </div>
+            <h4 className="char-name">QUICKY</h4>
+            <div className="col-2 text-lg">
+              <Image src={quickyImage} className="img-profile" alt="Quicky" />
             </div>
-            <div className="col-2 fs-normal">
-              <img src="images/ball.png" className="img-profile" alt="Quicky" />
-            </div>
-            <div className="col w-75 fs-normal">
+            <div className="char-desc">
               <p>Quicky is the athlete of Nekoverse.</p>
               <p>Quicky is fast, he plays ball, and stays away from drama. Quicky is annoyed by slowness. If you move slow, speak slow or think slow - don't expect much sympathy.  </p>
             </div>
           </div>
-          <br />
-          <br />
           <div className="position-relative pb-3">
             <div className="text-center fs-normal">
               <p>New characters are released every few weeks.</p>
@@ -614,7 +593,7 @@ export default function Home() {
         </section>
         <section id="art" className="pt-5">
           <div className="position-relative pb-3">
-            <h2 className="fw-bold text-center text-dark">NEKO ART</h2>
+            <h2 className="fw-bold text-center text-dark text-3xl">NEKO ART</h2>
           </div>
           <div className="position-relative pb-3">
             <div className="text-center fs-normal">
