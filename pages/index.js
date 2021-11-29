@@ -592,146 +592,114 @@ export default function Home() {
           <hr />
         </section>
         <section id="art" className="pt-5">
-          <div className="position-relative pb-3">
+          <div className="relative pb-3">
             <h2 className="fw-bold text-center text-dark text-3xl">NEKO ART</h2>
           </div>
-          <div className="position-relative pb-3">
+          <div className="relative pb-3">
             <div className="text-center fs-normal">
               <p>NEKO regularly drops artwork on the community.<br />
                 This is the list of drops so far.
               </p>
             </div>
           </div>
-          <div className="row">
-            <div className="col-4">
-              <div className="inline-block">
-                <h4 className="absolute">NKT1</h4>
-                <div className="fs-normal ml-24">Early Days:</div>
-              </div>
+          <div className="grid grid-cols-2 sm:grid-cols-6">
+            <div className="col-span-2 sm:row-span-3">
+              <h4 className="inline text-xl mr-6">NKT1</h4>
+              <span className="fs-normal">Early Days:</span>
             </div>
-            <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D/token-transfers"
-                className="contract-id">
-                0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D
-              </a>
-              <div className="container pt-2 pb-4">
-                <div className="row">
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://xyhqewpq5o3uwgfksyjakoqbpl3elg37mcolt2aqvrzp7i2vye5q.arweave.net/vg8CWfDrt0sYqpYSBToBevZFm39gnLnoEKxy_6NVwTs" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://cuh25brveoa32zsym43jcivoe65abbsacfkfodcjzlctwfcwv65a.arweave.net/FQ-uhjUjgb1mWGc2kSKuJ7oAhkARVFcMScrFOxRWr7o" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://3hifp3ixgovrd6jbeo436rqqmtfrcihlff5mfo23aj6uqn6t6mbq.arweave.net/2dBX7RczqxH5ISO5v0YQZMsRIOspesK7WwJ9SDfT8wM" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://itmhk2se26gvq5hvfdw6hy2xkrapyvznloxbgf2ewfs7q6zf5k6a.arweave.net/RNh1akTXjVh09Sjt4-NXVED8Vy1brhMXRLFl-Hsl6rw" className="img-max p-1" alt="" />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://7rphsg5f4nr3qbxhsjp6u5lxrbarbq5nd422twkf6tkv35spv4ya.arweave.net/_F55G6XjY7gG55Jf6nV3iEEQw60fNanZRfTVXfZPrzA" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://ogintiqwi6qcxb7vk5iqnoopdrxodts2xds727ujeto63rzixzqq.arweave.net/cZDZohZHoCuH9VdRBrnPHG7hzlq45f1-iSTd7ccovmE" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://bljntpbtxfrn227yyxtzolray2b2fjqyvpetyuekgd657bqzjrta.arweave.net/CtLZvDO5Yt1r-MXnly4gxoOiphiryTxQijD934YZTGY" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://battdq2rpbs5d5vd6cyrrhmdy473yql6nq4qhocehc2zwokh3aaa.arweave.net/CCcxw1F4ZdH2o_CxGJ2Dxz-8QX5sOQO4RDi1mzlH2AA" className="img-max p-1" alt="" />
-                  </div>
-                </div>
-              </div>
+            <a href="https://cchain.explorer.avax.network/tokens/0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D/token-transfers"
+              className="col-span-2 sm:col-span-4 contract-id">
+              0xE61Bd1F5a3e9440704fcB0f18dA421E114d5266D
+            </a>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://xyhqewpq5o3uwgfksyjakoqbpl3elg37mcolt2aqvrzp7i2vye5q.arweave.net/vg8CWfDrt0sYqpYSBToBevZFm39gnLnoEKxy_6NVwTs" className="img-max p-1" alt="" />
             </div>
-          </div>
-          <div className="row">
-            <div className="col-4">
-              <div className="inline-block" >
-                <h4 className="absolute">NKT2</h4>
-                <div className="fs-normal ml-24">Stay Pawsitive:</div>
-              </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://cuh25brveoa32zsym43jcivoe65abbsacfkfodcjzlctwfcwv65a.arweave.net/FQ-uhjUjgb1mWGc2kSKuJ7oAhkARVFcMScrFOxRWr7o" className="img-max p-1" alt="" />
             </div>
-            <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211/token-transfers"
-                className="contract-id">
-                0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211
-              </a>
-              <div className="container pt-2 pb-4">
-                <div className="row">
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://mndqs7rlhghdyo5amezvdhf2fyc5h4fgb37k3rgrvnybc2rtreiq.arweave.net/Y0cJfis5jjw7oGEzUZy6LgXT8KYO_q3E0atwEWoziRE" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://rt3fex4iyu2f6dp4rdpdse3uu7gn3sv2dneg5ga4mahxvm44nw7a.arweave.net/jPZSX4jFNF8N_IjeORN0p8zdyrobSG6YHGAPerOcbb4" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://4riaawzya4byi7x5lvxkjw6hbp2zjs23c5tojnbmp5yd567yeqdq.arweave.net/5FAAWzgHA4R-_V1upNvHC_WUy1sXZuS0LH9wPvv4JAc" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://lp6k3tl6qbfhzeeoab3os6rxq6dqvru366lykaufijvi6u6yw3oq.arweave.net/W_ytzX6ASnyQjgB26Xo3h4cKxpv3l4UChUJqj1PYtt0" className="img-max p-1" alt="" />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://wjykwdegts2onjnzgnhvu44luokrwbv2ekiy4dgw3phdcop6koya.arweave.net/snCrDIactOaluTNPWnOLo5UbBroikY4M1tvOMTn-U7A" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://cznsk4pkz35tp7uvsaiqt6nojua2vougka3paqji3zod6m4o3euq.arweave.net/FlslcerO-zf-lZARCfmuTQGquoZQNvBBKN5cPzOO2Sk" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://dw3imcu2ezkp5m4mqybptkzrplbrmeh6upxajt4eshwvq7r7rpha.arweave.net/HbaGCpomVP6zjIYC-asxesMWEP6j7gTPhJHtWH4_i84" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://p4waxxdhv6h74v7lkmrctkbnkihjiinu22lbcmj4rnufaorgp4kq.arweave.net/fywL3Gevj_5X61MiKagtUg6UIbTWlhExPItoUDomfxU" className="img-max p-1" alt="" />
-                  </div>
-                </div>
-              </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://3hifp3ixgovrd6jbeo436rqqmtfrcihlff5mfo23aj6uqn6t6mbq.arweave.net/2dBX7RczqxH5ISO5v0YQZMsRIOspesK7WwJ9SDfT8wM" className="img-max p-1" alt="" />
             </div>
-          </div>
-          <div className="row">
-            <div className="col-4">
-              <div className="inline-block">
-                <h4 className="absolute">NKT3</h4>
-                <div className="fs-normal ml-24">SuperNeko 16bit:</div>
-              </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://itmhk2se26gvq5hvfdw6hy2xkrapyvznloxbgf2ewfs7q6zf5k6a.arweave.net/RNh1akTXjVh09Sjt4-NXVED8Vy1brhMXRLFl-Hsl6rw" className="img-max p-1" alt="" />
             </div>
-            <div className="col-8 fs-normal">
-              <a href="https://cchain.explorer.avax.network/tokens/0x77dfd577a28A4937559e66F3E44De85A13de1116/token-transfers"
-                className="contract-id">
-                0x77dfd577a28A4937559e66F3E44De85A13de1116
-              </a>
-              <div className="container pt-2 pb-4">
-                <div className="row">
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://7jmpksiratkptzufg5pfn35xgeiqnxhe5phfjneevcnfz2sksaia.arweave.net/-lj1SREE1PnmhTdeVu-3MREG3OTrzlS0hKiaXOpKkBA" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://2epzmsx5m3bfg6iqceipqrep66n462vbtnsblfuuhmdmaqiwikaa.arweave.net/0R-WSv1mwlN5EBEQ-ESP95vPaqGbZBWWlDsGwEEWQoA" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://yj2lhzizcl7dhmcbssljr4h55p2xxafup7xwhmo5fmj5mjceey6a.arweave.net/wnSz5RkS_jOwQZSWmPD96_V7gLR_72Ox3SsT1iREJjw" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://cw7vuuujsgr3rsfp4uyxhw6vli476zlj7b7qp6r3ooovc25d7yyq.arweave.net/Fb9aUomRo7jIr-Uxc9vVWjn_ZWn4fwf6O3OdUWuj_jE" className="img-max p-1" alt="" />
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://ubl4oweigua5viixtpdnetgylall3ios5yq33nytfl7mbaymjsxq.arweave.net/oFfHWIg1AdqhF5vG0kzYWBa9odLuIb23Eyr-wIMMTK8" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://pg2si2ooi5a5zyycjppsye46ttvsjdygxbmjhx4tcncapxrvqzxq.arweave.net/ebUkac5HQdzjAkvfLBOenOskjwa4WJPfkxNEB941hm8" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://y7cm3w5oyouuhjoq36qznoeuywngegzo5cch7vfmsas5cho7v2xq.arweave.net/x8TN267DqUOl0N-hlriUxZpiGy7ohH_UrJAl0R3frq8" className="img-max p-1" alt="" />
-                  </div>
-                  <div className="col nft-display no-padding">
-                    <img className="img-max" src="https://6ita2tkqk3yxv3ujxn526uf56do4fwhf7za5jbro5nqeoh34amoq.arweave.net/8iYNTVBW8Xruibt7r1C98N3C2OX-QdSGLutgRx98Ax0" className="img-max p-1" alt="" />
-                  </div>
-                </div>
-              </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://7rphsg5f4nr3qbxhsjp6u5lxrbarbq5nd422twkf6tkv35spv4ya.arweave.net/_F55G6XjY7gG55Jf6nV3iEEQw60fNanZRfTVXfZPrzA" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://ogintiqwi6qcxb7vk5iqnoopdrxodts2xds727ujeto63rzixzqq.arweave.net/cZDZohZHoCuH9VdRBrnPHG7hzlq45f1-iSTd7ccovmE" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://bljntpbtxfrn227yyxtzolray2b2fjqyvpetyuekgd657bqzjrta.arweave.net/CtLZvDO5Yt1r-MXnly4gxoOiphiryTxQijD934YZTGY" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://battdq2rpbs5d5vd6cyrrhmdy473yql6nq4qhocehc2zwokh3aaa.arweave.net/CCcxw1F4ZdH2o_CxGJ2Dxz-8QX5sOQO4RDi1mzlH2AA" className="img-max p-1" alt="" />
+            </div>
+
+            <div className="col-span-2 sm:row-span-3">
+              <h4 className="inline text-xl mr-6">NKT2</h4>
+              <span className="fs-normal">Stay Pawsitive:</span>
+
+            </div>
+            <a href="https://cchain.explorer.avax.network/tokens/0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211/token-transfers"
+              className="col-span-2 sm:col-span-4 contract-id">
+              0x7EB0eDf73bd6E4338a24BF1B62A3b0303518A211
+            </a>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://mndqs7rlhghdyo5amezvdhf2fyc5h4fgb37k3rgrvnybc2rtreiq.arweave.net/Y0cJfis5jjw7oGEzUZy6LgXT8KYO_q3E0atwEWoziRE" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://rt3fex4iyu2f6dp4rdpdse3uu7gn3sv2dneg5ga4mahxvm44nw7a.arweave.net/jPZSX4jFNF8N_IjeORN0p8zdyrobSG6YHGAPerOcbb4" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://4riaawzya4byi7x5lvxkjw6hbp2zjs23c5tojnbmp5yd567yeqdq.arweave.net/5FAAWzgHA4R-_V1upNvHC_WUy1sXZuS0LH9wPvv4JAc" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://lp6k3tl6qbfhzeeoab3os6rxq6dqvru366lykaufijvi6u6yw3oq.arweave.net/W_ytzX6ASnyQjgB26Xo3h4cKxpv3l4UChUJqj1PYtt0" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://wjykwdegts2onjnzgnhvu44luokrwbv2ekiy4dgw3phdcop6koya.arweave.net/snCrDIactOaluTNPWnOLo5UbBroikY4M1tvOMTn-U7A" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://cznsk4pkz35tp7uvsaiqt6nojua2vougka3paqji3zod6m4o3euq.arweave.net/FlslcerO-zf-lZARCfmuTQGquoZQNvBBKN5cPzOO2Sk" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://dw3imcu2ezkp5m4mqybptkzrplbrmeh6upxajt4eshwvq7r7rpha.arweave.net/HbaGCpomVP6zjIYC-asxesMWEP6j7gTPhJHtWH4_i84" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://p4waxxdhv6h74v7lkmrctkbnkihjiinu22lbcmj4rnufaorgp4kq.arweave.net/fywL3Gevj_5X61MiKagtUg6UIbTWlhExPItoUDomfxU" className="img-max p-1" alt="" />
+            </div>
+            <div className="col-span-2 sm:row-span-3">
+              <h4 className="inline text-xl mr-6">NKT3</h4>
+              <span className="fs-normal">SuperNeko 16bit:</span>
+            </div>
+            <a href="https://cchain.explorer.avax.network/tokens/0x77dfd577a28A4937559e66F3E44De85A13de1116/token-transfers"
+              className="col-span-2 sm:col-span-4 contract-id">
+              0x77dfd577a28A4937559e66F3E44De85A13de1116
+            </a>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://7jmpksiratkptzufg5pfn35xgeiqnxhe5phfjneevcnfz2sksaia.arweave.net/-lj1SREE1PnmhTdeVu-3MREG3OTrzlS0hKiaXOpKkBA" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://2epzmsx5m3bfg6iqceipqrep66n462vbtnsblfuuhmdmaqiwikaa.arweave.net/0R-WSv1mwlN5EBEQ-ESP95vPaqGbZBWWlDsGwEEWQoA" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://yj2lhzizcl7dhmcbssljr4h55p2xxafup7xwhmo5fmj5mjceey6a.arweave.net/wnSz5RkS_jOwQZSWmPD96_V7gLR_72Ox3SsT1iREJjw" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://cw7vuuujsgr3rsfp4uyxhw6vli476zlj7b7qp6r3ooovc25d7yyq.arweave.net/Fb9aUomRo7jIr-Uxc9vVWjn_ZWn4fwf6O3OdUWuj_jE" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://ubl4oweigua5viixtpdnetgylall3ios5yq33nytfl7mbaymjsxq.arweave.net/oFfHWIg1AdqhF5vG0kzYWBa9odLuIb23Eyr-wIMMTK8" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://pg2si2ooi5a5zyycjppsye46ttvsjdygxbmjhx4tcncapxrvqzxq.arweave.net/ebUkac5HQdzjAkvfLBOenOskjwa4WJPfkxNEB941hm8" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://y7cm3w5oyouuhjoq36qznoeuywngegzo5cch7vfmsas5cho7v2xq.arweave.net/x8TN267DqUOl0N-hlriUxZpiGy7ohH_UrJAl0R3frq8" className="img-max p-1" alt="" />
+            </div>
+            <div className="col nft-display no-padding">
+              <img className="img-max" src="https://6ita2tkqk3yxv3ujxn526uf56do4fwhf7za5jbro5nqeoh34amoq.arweave.net/8iYNTVBW8Xruibt7r1C98N3C2OX-QdSGLutgRx98Ax0" className="img-max p-1" alt="" />
             </div>
           </div>
         </section >
