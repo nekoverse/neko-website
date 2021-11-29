@@ -8,7 +8,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { useWeb3React } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
 import { ethers } from "ethers";
 import useEtherSWR from 'ether-swr'
 
@@ -20,33 +19,13 @@ import squareImage from "../public/images/square.png"
 import quickyImage from "../public/images/ball.png"
 
 import { useContractAddresses, useContracts } from '../hooks/evm'
-import { AVALANCHE_CHAIN_ID, FUJI_CHAIN_ID, validChainId } from '../lib/evm'
+import { formatNekoBillions, injectedConnector, validChainId } from '../lib/evm'
 import { useHasWeb3Provider } from '../components/ProviderDetectorContext'
 
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ')
 }
-
-export const Networks = {
-  Avalanche: AVALANCHE_CHAIN_ID,
-  Fuji: FUJI_CHAIN_ID
-}
-
-function formatNeko(value) {
-  return (value.toString() / (10 ** 8))
-}
-
-function formatNekoBillions(value) {
-  return formatNeko(value) / 10 ** 9
-}
-
-export const injectedConnector = new InjectedConnector({
-  supportedChainIds: [
-    Networks.Avalanche,// Avalanche
-    Networks.Fuji
-  ]
-})
 
 function LottoState({ account }) {
   const { neko: nekoAddr, lotto: lottoAddr } = useContractAddresses()
@@ -370,7 +349,7 @@ export default function Home() {
                       <a className="fs-normal menu-item" href="#lottery">Lotto</a>
                       <a className="fs-normal menu-item" href="#characters">Characters</a>
                       <a className="fs-normal menu-item" href="#art">Art</a>
-                      <a className="fs-normal menu-iem" href="auction.html">Auction</a>
+                      <Link href="/auction"><a className="fs-normal menu-item">Auction</a></Link>
                     </div>
                   </div>
                 </Popover.Panel>
@@ -435,7 +414,7 @@ export default function Home() {
           <br />
           <div className="">
             <div className="text-center m-auto">
-              <Link href="">
+              <Link href="/auction">
                 <a>
                   <Image src={ultra64Gif} alt="Neko Logo"></Image>
                   <div className="fs-large ff-lulo">Ultra 64</div>
