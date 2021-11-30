@@ -108,7 +108,7 @@ function FirstBid({ tokenId }) {
         <div className="input-group input-group-lg mb-4 pl-5 pr-5">
           <input type="text" value={bid} onChange={e => setBid(e.target.value)}
             className="bidAmount input-lg form-control left-rounded" aria-label="Amount" />
-          <button onClick={submitBid} className="bid btn btn-primary right-rounded">
+          <button disabled={bid < 3} onClick={submitBid} className="bid btn btn-primary right-rounded">
             Bid
           </button>
         </div>
@@ -176,7 +176,8 @@ function TokenOnSale({ tokenId }) {
   }
   return (
     <div className="">
-      <img src={`https://arweave.net/${tokenImageHashes[tokenId]}`} className="img-max p-1" alt="" />
+      <img src={`https://arweave.net/${tokenImageHashes[tokenId]}`}
+        className="img-max p-1" alt={`Neko #${tokenId}`} />
       {active ? (
         <TokenBidder tokenId={tokenId} />
       ) : (
@@ -186,7 +187,34 @@ function TokenOnSale({ tokenId }) {
   )
 }
 
+function SoldFor({ tokenId }) {
+  const { account } = useWeb3React()
+  const { auction: auctionAddr } = useContractAddresses()
+  const { auction } = useContracts()
+  const { data: soldData } = useEtherSWR(account ? [
+    [auctionAddr, 'highestBidOn', tokenId],
+    [auctionAddr, 'winnerOf', tokenId]
+  ] : [])
+  const [salePrice, winner] = soldData ? soldData : []
+  function mint(){
+    auction.collect(tokenId)
+  }
+  return (
+    <div className="">
+      <span>{salePrice && formatAvax(salePrice)}</span>
+      {winner && (winner === account) && (
+        <button onClick={mint}>mint!</button>
+      )}
+    </div>
+  )
+}
+
 export default function AuctionPage() {
+  const { active, account, activate } = useWeb3React()
+  const { auction } = useContracts()
+  function withdraw() {
+    auction.withdraw()
+  }
   return (
     <main className="pt-3 pb-5 container-sm">
       <section id="intro" className="pt-5">
@@ -248,9 +276,12 @@ export default function AuctionPage() {
           ))}
         </div>
         <div id="withdrawFundsBox" className="position-relative pt-3 pb-3 d-none mx-auto">
-          <button className="withdraw btn btn-lg btn-primary mx-auto d-block rounded-pill" type="submit">Withdraw all bids</button>
+          <button onClick={withdraw}
+            className="withdraw btn btn-lg btn-primary mx-auto d-block rounded-pill" type="submit">Withdraw all bids</button>
           <div className="d-flex justify-content-center">(winning bids won't be withdrawn)</div>
         </div>
+        {/* hide for now pending connect flow rework
+
         <div id="installMetamaskBox1" className="position-relative pt-3 pb-3 d-none alert mx-auto">
           <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
         </div>
@@ -260,6 +291,7 @@ export default function AuctionPage() {
         <div id="switchNetworkBox1" className="position-relative pt-3 pb-3 d-none alert mx-auto">
           <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
         </div>
+        */}
       </section >
       <hr />
       <section id="sold" className="pt-5">
@@ -269,35 +301,17 @@ export default function AuctionPage() {
         <div className="position-relative pb-3">
           <div className="text-center fs-normal">
             <p>These NEKOs have been sold.</p>
-            <p>Mouseover to see the sale price.</p>
           </div>
         </div>
-        <div className="container pt-2 pb-4">
-          <div id="row0" className="row"></div>
-          <div id="row1" className="row"></div>
-          <div id="row2" className="row"></div>
-          <div id="row3" className="row"></div>
-          <div id="row4" className="row"></div>
-          <div id="row5" className="row"></div>
-          <div id="row6" className="row"></div>
-          <div id="row7" className="row"></div>
-          {/*
-            <div className="row">
-                <div className="col nft-display-small no-padding">
-                    <input className="tokenId" type="hidden" value="0"/>
-                    <div className="d-none">
-                        <br/>
-                        <div className="soldFor d-flex justify-content-center fs-large ff-lulo"> 9</div>
-                    </div>
-                    <img className="img-max" src="https://arweave.net/S7X-9M7WZA9FsNg-7s5vcb36jpbAmNsEsSzxZqmrR04" className="img-max p-1" alt=""/>
-                </div>
+        <div className="grid grid-cols-4 sm:grid-cols-8 pt-2 pb-4">
+          {tokensSold.map(tokenId => (
+            <div className="flow flow-col">
+              <img src={`https://arweave.net/${tokenImageHashes[tokenId]}`} />
+              {active && <SoldFor tokenId={tokenId} />}
             </div>
-            */}
+          ))}
         </div>
-        <br />
-        <div id="mintNftBox" className="position-relative pt-3 pb-3 d-none mx-auto">
-          <button className="mint btn btn-lg btn-primary mx-auto d-block rounded-pill" type="submit">Mint my NEKO</button>
-        </div>
+        {/* hide for now pending connect flow rework
         <div id="installMetamaskBox2" className="position-relative pt-3 pb-3 d-none alert mx-auto">
           <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
         </div>
@@ -307,7 +321,7 @@ export default function AuctionPage() {
         <div id="switchNetworkBox2" className="position-relative pt-3 pb-3 d-none alert mx-auto">
           <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
         </div>
-        <br />
+        */}
       </section >
     </main >
   )
