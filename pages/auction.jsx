@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { ethers } from "ethers";
 import useEtherSWR from 'ether-swr'
@@ -91,6 +92,53 @@ const tokenImageHashes = [
   "lTgT6zl14_-0rdieGCZLJhAKLzVXuWoI9MAU3GiAEWE",
 ]
 
+function FirstBid({ tokenId }) {
+  const [bid, setBid] = useState("")
+  const { auction } = useContracts()
+
+  function submitBid() {
+    const weiBid = ethers.utils.parseUnits(bid, 'ether');
+    console.log("Placing " + bid + " bid on token #", tokenId);
+    auction.bidTopUp(tokenId, { value: weiBid })
+  }
+  return (
+    <div className="bidBox">
+      <div className="d-flex justify-content-center fs-normal">First bid</div>
+      <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Bid">
+        <div className="input-group input-group-lg mb-4 pl-5 pr-5">
+          <input type="text" value={bid} onChange={e => setBid(e.target.value)}
+            className="bidAmount input-lg form-control left-rounded" aria-label="Amount" />
+          <button onClick={submitBid} className="bid btn btn-primary right-rounded">
+            Bid
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function UpBid({ tokenId }) {
+  const { auction } = useContracts()
+
+  function submitUpBid(upBid) {
+    const weiUpBid = ethers.utils.parseUnits(upBid, 'ether');
+    console.log("Placing " + upBid + " bid on token #", tokenId);
+    auction.bidTopUp(tokenId, { value: weiUpBid })
+  }
+  return (
+    <div className="upbidBox">
+      <div className="d-flex justify-content-center fs-normal">Upbid</div>
+      <div className="d-flex justify-content-center">
+        <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Upbid">
+          <button onClick={() => submitUpBid(0.5)} className="upbid btn btn-primary left-rounded"> 0.5 </button>
+          <button onClick={() => submitUpBid(1)} className="upbid btn btn-primary"> 1 </button>
+          <button onClick={() => submitUpBid(2)} className="upbid btn btn-primary right-rounded"> 2 </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function TokenBidder({ tokenId }) {
   const { account, active, activate, chainId } = useWeb3React()
 
@@ -100,32 +148,23 @@ function TokenBidder({ tokenId }) {
     [auctionAddr, 'bidOf', account, tokenId],
   ] : [])
   const [highBid, myBid] = auctionState ? auctionState : []
-    const { auction } = useContracts()
   return (
     <div className="">
       <div className="d-flex justify-content-center fs-large ff-lulo">
         <div className="myBid text-primary">{myBid && formatAvax(myBid)}</div>|
         <div className="highBid">{highBid && formatAvax(highBid)}</div>
       </div>
-      <div className="bidBox">
-        <div className="d-flex justify-content-center fs-normal">First bid</div>
-        <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Bid">
-          <div className="input-group input-group-lg mb-4 pl-5 pr-5">
-            <input type="text" className="bidAmount input-lg form-control left-rounded" aria-label="Amount" />
-            <button type="button" className="bid btn btn-primary right-rounded"> Bid </button>
-          </div>
-        </div>
-      </div>
-      <div className="upbidBox">
-        <div className="d-flex justify-content-center fs-normal">Upbid</div>
-        <div className="d-flex justify-content-center">
-          <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Upbid">
-            <button type="button" className="upbid btn btn-primary left-rounded" data-amount="0.5"> 0.5 </button>
-            <button type="button" className="upbid btn btn-primary" data-amount="1"> 1 </button>
-            <button type="button" className="upbid btn btn-primary right-rounded" data-amount="2"> 2 </button>
-          </div>
-        </div>
-      </div>
+      {(highBid !== undefined) && (
+        (highBid > 0) ? (
+          (highBid.eq(myBid)) ? (
+            <div>You're the top bidder!</div>
+          ) : (
+            <UpBid tokenId={tokenId} />
+          )
+        ) : (
+          <FirstBid tokenId={tokenId} />
+        )
+      )}
     </div>
   )
 }
