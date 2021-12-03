@@ -1,8 +1,4 @@
-import { useState, Fragment } from 'react'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-import { faDiscord, faTelegramPlane, faTwitter, faGithub } from '@fortawesome/free-brands-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Popover, Transition } from '@headlessui/react'
+import { useState } from 'react'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -21,11 +17,7 @@ import quickyImage from "../public/images/ball.png"
 import { useContractAddresses, useContracts } from '../hooks/evm'
 import { formatNekoBillions, injectedConnector, validChainId } from '../lib/evm'
 import { useHasWeb3Provider } from '../components/ProviderDetectorContext'
-
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
+import Nav from '../components/Nav'
 
 function LottoState({ account }) {
   const { neko: nekoAddr, lotto: lottoAddr } = useContractAddresses()
@@ -64,10 +56,13 @@ function LottoState({ account }) {
         (lottoDeposit && (lottoDeposit > 0)) ? (
           <div id="alreadyBought"
             className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-            <div className="text-center fs-smaller">
+            <div className="text-center">
               You are in this draw already.
             </div>
-            <div id="myStake" className="pt-1 pb-1 fs-extra-large text-center">
+            <div className="text-center mt-2">
+              Your stake:
+            </div>
+            <div id="myStake" className="pt-1 pb-1 text-6xl text-center">
               {formatNekoBillions(lottoDeposit)}B
             </div>
           </div>
@@ -78,21 +73,23 @@ function LottoState({ account }) {
               Enter the lotto with NEKO
             </div>
             <div className="pt-3 pb-3">
-              <div className="input-group input-group-lg mb-3 pl-4 pr-4">
-                <input type="text" className="buyLotto form-control left-rounded"
-                  aria-label="Amount (to the nearest dollar)"
-                  onChange={e => setLottoAmount(e.target.value)} />
-                <span className="input-group-text">B</span>
+              <div className="input-group input-group-lg mb-3 pl-4 pr-4 flex flex-row justify-center m-auto">
+                <div className="relative">
+                  <input type="text" className="text-xl py-2 outline-none focus:ring-1 ring-inset pl-4 pr-20 w-28"
+                    aria-label="Amount (to the nearest dollar)"
+                    onChange={e => setLottoAmount(e.target.value)} />
+                  <div className="absolute right-0 top-0 h-full mr-2 flex items-center pointer-events-none">B NEKO</div>
+                </div>
                 {(!amount || (allowance && (allowance >= amount))) ? (
                   <button type="button"
                     onClick={buyLottoTicket}
-                    className="buyLotto btn btn-lg btn-primary right-rounded"
+                    className="btn-pill rounded-r-xl"
                     disabled={!amount || !allowance || (allowance <= 0)}>
-                    Buy
+                    Enter
                   </button>
                 ) : (
                   <button onClick={approveLottoSpend}
-                    className="buyLotto btn btn-lg btn-primary right-rounded">
+                    className="btn-pill rounded-r-xl">
                     Approve
                   </button>
                 )}
@@ -105,18 +102,14 @@ function LottoState({ account }) {
 
       <div id="lottoStatus"
         className="action-section position-relative pt-3 pb-3 alert alert-primary mx-auto d-none">
-        <h5>DRAW #<span id="drawNo">{drawNo && drawNo.toString()}</span></h5>
-        <div className="row fs-normal">
-          <div className="col-9">Entries:</div>
-          <div id="entries" className="col">{playerCount && playerCount.toString()}</div>
-        </div>
-        <div className="row fs-normal">
-          <div className="col-9">Total so far:</div>
-          <div id="totalSoFar" className="col">{totalAmount && formatNekoBillions(totalAmount)}B</div>
-        </div>
-        <div className="row fs-normal">
-          <div className="col-9">Max deposit:</div>
-          <div id="maxDeposit" className="col">{maxDeposit && formatNekoBillions(maxDeposit)}B</div>
+        <h5 className="text-xl text-center mb-8">DRAW #<span>{drawNo && drawNo.toString()}</span></h5>
+        <div className="grid grid-cols-2 gap-2 fs-normal">
+          <div className="text-right">Entries:</div>
+          <div className="font-black text-3xl">{playerCount && playerCount.toString()}</div>
+          <div className="text-right">Total so far:</div>
+          <div className="font-black text-3xl">{totalAmount && formatNekoBillions(totalAmount)}B</div>
+          <div className="text-right">Max deposit:</div>
+          <div className="font-black text-3xl">{maxDeposit && formatNekoBillions(maxDeposit)}B</div>
         </div>
       </div>
     </>
@@ -234,21 +227,21 @@ function Buy() {
             ) : (
               <div id="buyNekoBox"
                 className="action-section position-relative pt-3 pb-3 d-none alert alert-primary mx-auto">
-                <div className="text-center fs-smaller">
+                <div className="text-center text-2xl">
                   Buy me with AVAX
                 </div>
                 <div className="pt-3 pb-3">
-                  <div className="d-flex justify-content-center">
-                    <div className="btn-group btn-group-lg pb-2 flex flex-row" role="group" aria-label="Buy me">
-                      <button type="button" className="buy btn btn-primary left-rounded ml-4"
+                  <div className="flex justify-center">
+                    <div className="btn-group btn-group-lg pb-6 pt-2 flex flex-row text-lg" role="group" aria-label="Buy me">
+                      <button type="button" className="buy btn-buy rounded-l-xl"
                         onClick={() => buyNeko("0.08")}>
                         0.08
                       </button>
-                      <button type="button" className="buy btn btn-primary ml-4"
+                      <button type="button" className="buy btn-buy"
                         onClick={() => buyNeko("0.8")}>
                         0.8
                       </button>
-                      <button type="button" className="buy btn btn-primary right-rounded ml-4"
+                      <button type="button" className="buy btn-buy rounded-r-xl"
                         onClick={() => buyNeko("8")}>
                         8.0
                       </button>
@@ -256,9 +249,9 @@ function Buy() {
                   </div>
                   <div className="text-center">(pick how many AVAX worth you want)</div>
                 </div>
-                <div className="text-center fs-smaller pb-2">OR</div>
+                <div className="text-center fs-smaller mb-6">OR</div>
                 <div className="text-center">
-                  <a id="add-link" href="" className="fs-smaller">Add me to your wallet for later</a>
+                  <a id="add-link" href="" className="fs-smaller rounded-xl p-4 bg-gray-200 hover:bg-gray-300 border border-gray-300">Add me to your wallet for later</a>
                 </div>
               </div>
             )
@@ -285,7 +278,7 @@ function Buy() {
               </div>
             ) : (
               <div
-                className="relative pt-3 pb-3 text-center alert alert-danger mx-auto">
+                className="relative pt-3 pb-3 text-center alert alert-danger mx-auto w-96">
                 <div className="pb-3 fs-smaller" role="alert">
                   Connect your wallet to get your NEKOs.
                 </div>
@@ -319,91 +312,28 @@ export default function Home() {
   }
 
   return (
-    <>
-      <header className="flex flex-row p-4 justify-between">
-        <Popover className="relative">
-          {({ open }) => (
-            <>
-              <Popover.Button
-                className={classNames(
-                  open ? 'text-gray-900' : 'text-gray-800',
-                  'text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500'
-                )}
-              >
-                <FontAwesomeIcon icon={faBars} className="w-8 h-8" />
-              </Popover.Button>
-
-              <Transition
-                as={Fragment}
-                enter="transition ease-out duration-200"
-                enterFrom="opacity-0 translate-y-1"
-                enterTo="opacity-100 translate-y-0"
-                leave="transition ease-in duration-150"
-                leaveFrom="opacity-100 translate-y-0"
-                leaveTo="opacity-0 translate-y-1"
-              >
-                <Popover.Panel className="absolute z-10 transform -left-4 mt-3 px-2 w-screen max-w-xs sm:px-0">
-                  <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
-                    <div className="relative grid gap-6 bg-white px-5 py-6 sm:gap-8 sm:p-8">
-                      <a className="fs-normal menu-item" href="#vision">Vision</a>
-                      <a className="fs-normal menu-item" href="#lottery">Lotto</a>
-                      <a className="fs-normal menu-item" href="#characters">Characters</a>
-                      <a className="fs-normal menu-item" href="#art">Art</a>
-                      <Link href="/auction"><a className="fs-normal menu-item">Auction</a></Link>
-                    </div>
-                  </div>
-                </Popover.Panel>
-              </Transition>
-            </>
-          )}
-        </Popover>
-        <div className="justify-self-center flex flex-row gap-2">
-          <a href="https://discord.gg/FCfrVDaMTP">
-            <FontAwesomeIcon icon={faDiscord} className="social-icon" title="Discord" />
-          </a>
-          <a href="https://t.me/neko_luckycat_g">
-            <FontAwesomeIcon icon={faTelegramPlane} className="social-icon" title="Telegram" />
-          </a>
-          <a href="https://twitter.com/LuckyCatNEKO1">
-            <FontAwesomeIcon icon={faTwitter} className="social-icon" title="Twitter" />
-          </a>
-          <a href="https://github.com/nekoverse/neko-contracts">
-            <FontAwesomeIcon icon={faGithub} className="social-icon" title="GitHub" />
-          </a>
-        </div>
-
-        <div className="" >
-          {/* hide i18n for now but keep item there for positioning purposes
-                  <a className="nav-link dropdown-toggle fs-smaller" href="#" id="navbarDropdownMenuLink78" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span className="flag-icon flag-icon-us text-2xl"></span></a>
-          <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink78">
-            <a className="dropdown-item" href="index.html"><span className="flag-icon flag-icon-us text-2xl"></span> English</a>
-            <a className="dropdown-item" href="index.zh.html"><span className="flag-icon flag-icon-cn text-2xl"></span> 汉语</a>
-            <a className="dropdown-item" href="index.ru.html"><span className="flag-icon flag-icon-ru text-2xl"></span> Русский</a>
-          </div>
-         */}
-        </div>
-
-      </header>
+    <div className="max-w-6xl m-auto">
+      <Nav />
       <main className="p-4">
         <section className="pt-5">
-          <div className="max-w-xs mx-auto mb-6">
-            <Image src={nekoLogo} layout="responsive" alt="Neko Logo" />
+          <div className="relative w-32 h-32 md:w-64 md:h-64 mx-auto mb-6">
+            <Image src={nekoLogo} layout="fill" alt="Neko Logo" />
           </div>
-          <h1 className="text-center text-5xl mb-6">NEKO</h1>
-          <div className="text-center text-lg fs-normal mb-8">
+          <h1 className="text-center text-6xl md:text-8xl mb-9">NEKO</h1>
+          <div className="text-center text-lg fs-normal mb-9">
             <p className="mb-1">I bring wealth and good fortune.</p>
             <p>Buy me to make your wallet lucky.</p>
           </div>
-          <div>
+          <div className="mb-9">
             <Buy />
           </div>
 
-          <div className="text-center fs-normal my-4">
+          <div className="text-center fs-normal mb-12">
             <p>Total supply: 8,888,888,888,888,888<br />
               No inflation, No deflation, No tax.</p>
           </div>
 
-          <div className="text-center fs-normal my-4">
+          <div className="text-center fs-normal mb-12">
             <p>NEKO contract on Avalanche C-Chain:<br />
               <a href="https://snowtrace.io/address/0xD9702F5E3b0eb7452967CB82529776D672bdC03F/transactions"
                 className="contract-id">
@@ -415,79 +345,67 @@ export default function Home() {
           <div className="">
             <div className="text-center m-auto">
               <Link href="/auction">
-                <a>
+                <a className="text-blue-600 hover:underline hover:text-blue-900">
                   <Image src={ultra64Gif} alt="Neko Logo"></Image>
-                  <div className="fs-large ff-lulo">Ultra 64</div>
-                  <div className=""><b>NFT Collection</b></div>
-                  <div><i>On Sale Now!</i></div>
+                  <div className="fs-large ff-lulo mb-2">Ultra 64</div>
+                  <div className="text-3xl mb-2"><b>NFT Collection</b></div>
+                  <div className="text-3xl"><i>On Sale Now!</i></div>
                 </a>
               </Link>
             </div>
           </div>
           <br />
-          <div className="position-relative pt-3 pb-3">
-            <p className="mb-4 text-center text-2xl font-bold">NEKO Markets:</p>
-            <div className="flex flex-row justify-center gap-4">
+          <div className="relative pt-3 pb-3 my-8">
+            <p className="mb-5 text-center text-2xl">NEKO Markets:</p>
+            <div className="flex flex-row flex-wrap justify-center gap-4">
               <span className="m-1">
                 <a href="https://info.pangolin.exchange/#/token/0xd9702f5e3b0eb7452967cb82529776d672bdc03f">
-                  <img src="images/pangolin_logo.svg" className="w-8 h-8" alt="Pangolin" />
+                  <img src="images/pangolin_logo.svg" className="market-icon" alt="Pangolin" />
                 </a>
               </span>
               <span className="m-1">
                 <a href="https://www.traderjoexyz.com/#/trade">
-                  <img src="images/traderjoe_logo.png" className="w-8 h-8" alt="Trader Joe" />
+                  <img src="images/traderjoe_logo.png" className="market-icon" alt="Trader Joe" />
                 </a>
               </span>
               <span className="m-1">
                 <a href="https://nomics.com/assets/neko3-lucky-cat">
-                  <img src="images/nomics_logo.png" className="w-8 h-8" alt="Nomics" />
+                  <img src="images/nomics_logo.png" className="market-icon" alt="Nomics" />
                 </a>
               </span>
               <span className="m-1"><a href="https://swap.olive.cash/#/swap">
-                <img src="images/olive_logo.png" className="w-8 h-8" alt="Olive" />
+                <img src="images/olive_logo.png" className="market-icon" alt="Olive" />
               </a>
               </span>
               <span className="m-1">
                 <a href="https://www.livecoinwatch.com/price/LuckyCat-_NEKO">
-                  <img src="images/livecoinwatch_logo.png" className="w-8 h-8" alt="Olive" />
+                  <img src="images/livecoinwatch_logo.png" className="market-icon" alt="Olive" />
                 </a>
               </span>
             </div>
           </div>
           <hr />
         </section >
-        <section id="vision" className="pt-5">
-          <div className="row pb-3">
-            <div className="col-3">
-              <h4 className="text-3xl">VISION</h4>
-            </div>
-            <div className="col w-75 fs-normal">
-              <p>NEKO is the main character of a brand new world, a world of optimism and good luck.</p>
-              <p>This world - Nekoverse - will grow over time with new characters, stories, on-chain games and other content.</p>
-            </div>
+        <section id="vision" className="pt-16 grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <h4 className="text-2xl mt-2 lg:mt-0">VISION</h4>
+          <div className="col-span-3 fs-normal">
+            <p className="mb-2">NEKO is the main character of a brand new world, a world of optimism and good luck.</p>
+            <p>This world - Nekoverse - will grow over time with new characters, stories, on-chain games and other content.</p>
           </div>
-          <div className="row pb-3">
-            <div className="col-3">
-              <h4 className="text-3xl">NEKOVERSE</h4>
-            </div>
-            <div className="col w-75 fs-normal">
-              <img src="images/world.jpg" className="img-max" alt="Nekoverse" />
-            </div>
+          <h4 className="text-2xl mt-2 lg:mt-0">NEKOVERSE</h4>
+          <div className="col-span-3 fs-normal">
+            <img src="images/world.jpg" className="img-max" alt="Nekoverse" />
           </div>
-          <div className="row pb-3">
-            <div className="col-3">
-              <h4 className="text-3xl">ROADMAP</h4>
-            </div>
-            <div className="col w-75 fs-normal">
-              <p>There isn't one. Nekoverse will grow organically and randomly. It will go in strange directions that at times might not make sense but, in the end, everything will come together.</p>
-              <p>NEKO is a creative project above all else and a rigid roadmap at this point will do more harm than good.</p>
-            </div>
+          <h4 className="text-2xl mt-2 lg:mt-0">ROADMAP</h4>
+          <div className="col-span-3 fs-normal">
+            <p className="mb-2">There isn't one. Nekoverse will grow organically and randomly. It will go in strange directions that at times might not make sense but, in the end, everything will come together.</p>
+            <p>NEKO is a creative project above all else and a rigid roadmap at this point will do more harm than good.</p>
           </div>
-          <hr />
+          <hr className="col-span-full my-8" />
         </section>
-        <section id="lottery" className="pt-5">
+        <section id="lottery" className="pt-5 md:px-16">
           <div className="relative pb-3">
-            <h2 className="fw-bold text-center text-dark">NEKO LOTTO</h2>
+            <h2 className="fw-bold text-center text-dark text-4xl">NEKO LOTTO</h2>
           </div>
           <div className="relative pb-3">
             <div className="text-center fs-normal">
@@ -496,8 +414,8 @@ export default function Home() {
             </div>
           </div>
           <Lotto />
-          <div className="relative pb-3 fs-normal">
-            <p className="font-bold">Here is how it works</p>
+          <div className="relative pb-3 text-2xl mt-4">
+            <p className="font-bold mb-4">Here is how it works:</p>
             <ul>
               <li>Each draw requires 8 entries.</li>
               <li>You can only enter a draw once.</li>
@@ -522,10 +440,10 @@ export default function Home() {
         </section >
         <section id="characters" className="pt-5">
           <div className="position-relative pb-3">
-            <h2 className="text-3xl fw-bold text-center text-dark mb-4">NEKO CHARACTERS</h2>
+            <h2 className="text-2xl fw-bold text-center text-dark mb-4">NEKO CHARACTERS</h2>
           </div>
-          <div className="relative pb-3 mb-4">
-            <div className="text-center fs-normal">
+          <div className="relative md:pb-3 md:mb-4">
+            <div className="text-center">
               <p>Meet NEKO characters!</p>
             </div>
           </div>
@@ -539,7 +457,7 @@ export default function Home() {
               <p>Everyone loves Neko and Neko loves them all back. Neko is cute, fluffy, lucky kitty that wants to make the world a better place. </p>
             </div>
             <h4 className="char-name">REBEL</h4>
-            <div className="text-lg">
+            <div className="">
               <Image src={rebelImage} className="img-profile" alt="Rebel" />
             </div>
             <div className="char-desc">
@@ -547,7 +465,7 @@ export default function Home() {
               <p>Rebel is everything Neko is not. He never misses an opportunity to harm Neko, but it almost never works and Neko never holds a grudge.  </p>
             </div>
             <h4 className="char-name">SQUARE</h4>
-            <div className="text-lg">
+            <div>
               <Image src={squareImage} className="img-profile" alt="Rebel" />
             </div>
             <div className="char-desc">
@@ -563,8 +481,8 @@ export default function Home() {
               <p>Quicky is fast, he plays ball, and stays away from drama. Quicky is annoyed by slowness. If you move slow, speak slow or think slow - don't expect much sympathy.  </p>
             </div>
           </div>
-          <div className="position-relative pb-3">
-            <div className="text-center fs-normal">
+          <div className="relative pb-3 mt-4">
+            <div className="text-center">
               <p>New characters are released every few weeks.</p>
             </div>
           </div>
@@ -692,6 +610,6 @@ export default function Home() {
           <a href="https://www.avalabs.org/"><img src="images/poweredbyavalanchewhite.png" className="img-fluid mx-auto d-block" alt="Powered by Avalanche" /></a>
         </div>
       </footer>
-    </>
+    </div>
   )
 }

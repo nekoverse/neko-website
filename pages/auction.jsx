@@ -5,6 +5,7 @@ import useEtherSWR from 'ether-swr'
 
 import { useContractAddresses, useContracts } from '../hooks/evm'
 import { injectedConnector, formatNeko, formatAvax } from '../lib/evm'
+import Nav from '../components/Nav'
 
 let tokensOnSale = [40, 41, 42, 43, 44, 45, 46, 47];
 let tokensSold = [
@@ -102,13 +103,13 @@ function FirstBid({ tokenId }) {
     auction.bidTopUp(tokenId, { value: weiBid })
   }
   return (
-    <div className="bidBox">
-      <div className="d-flex justify-content-center fs-normal">First bid</div>
+    <div className="bidBox flex flex-col items-center">
+      <div>First bid</div>
       <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Bid">
-        <div className="input-group input-group-lg mb-4 pl-5 pr-5">
+        <div className="flex flex-row">
           <input type="text" value={bid} onChange={e => setBid(e.target.value)}
-            className="bidAmount input-lg form-control left-rounded" aria-label="Amount" />
-          <button disabled={bid < 3} onClick={submitBid} className="bid btn btn-primary right-rounded">
+            className="rounded-l-xl text-xl py-1 px-4 outline-none focus:ring-1 ring-inset" aria-label="Amount" />
+          <button disabled={bid < 3} onClick={submitBid} className="btn-pill rounded-r-xl">
             Bid
           </button>
         </div>
@@ -130,9 +131,9 @@ function UpBid({ tokenId }) {
       <div className="d-flex justify-content-center fs-normal">Upbid</div>
       <div className="d-flex justify-content-center">
         <div className="btn-group btn-group-lg pb-2" role="group" aria-label="Upbid">
-          <button onClick={() => submitUpBid(0.5)} className="upbid btn btn-primary left-rounded"> 0.5 </button>
-          <button onClick={() => submitUpBid(1)} className="upbid btn btn-primary"> 1 </button>
-          <button onClick={() => submitUpBid(2)} className="upbid btn btn-primary right-rounded"> 2 </button>
+          <button onClick={() => submitUpBid("0.5")} className="btn-pill rounded-l-xl"> 0.5 </button>
+          <button onClick={() => submitUpBid("1")} className="btn-pill"> 1 </button>
+          <button onClick={() => submitUpBid("2")} className="btn-pill rounded-r-xl"> 2 </button>
         </div>
       </div>
     </div>
@@ -150,7 +151,7 @@ function TokenBidder({ tokenId }) {
   const [highBid, myBid] = auctionState ? auctionState : []
   return (
     <div className="">
-      <div className="d-flex justify-content-center fs-large ff-lulo">
+      <div className="flex justify-center text-lg ff-lulo">
         <div className="myBid text-primary">{myBid && formatAvax(myBid)}</div>|
         <div className="highBid">{highBid && formatAvax(highBid)}</div>
       </div>
@@ -175,13 +176,13 @@ function TokenOnSale({ tokenId }) {
     activate(injectedConnector)
   }
   return (
-    <div className="">
+    <div className="text-center mb-8">
       <img src={`https://arweave.net/${tokenImageHashes[tokenId]}`}
         className="img-max p-1" alt={`Neko #${tokenId}`} />
       {active ? (
         <TokenBidder tokenId={tokenId} />
       ) : (
-        <button className="btn" onClick={connectWallet}>Connect Wallet</button>
+        <button className="btn-pill rounded-xl" onClick={connectWallet}>Connect Wallet</button>
       )}
     </div>
   )
@@ -196,11 +197,11 @@ function SoldFor({ tokenId }) {
     [auctionAddr, 'winnerOf', tokenId]
   ] : [])
   const [salePrice, winner] = soldData ? soldData : []
-  function mint(){
+  function mint() {
     auction.collect(tokenId)
   }
   return (
-    <div className="">
+    <div className="text-center">
       <span>{salePrice && formatAvax(salePrice)}</span>
       {winner && (winner === account) && (
         <button onClick={mint}>mint!</button>
@@ -216,71 +217,69 @@ export default function AuctionPage() {
     auction.withdraw()
   }
   return (
-    <main className="pt-3 pb-5 container-sm">
-      <section id="intro" className="pt-5">
-        <div className="position-relative mr-4">
-          <img src="images/ultra64-promo.gif" className="img-fluid mx-auto d-block" alt="Neko Logo" />
-        </div>
-        <div className="position-relative pb-3">
-          <h1 className="text-center fs-extra-large">NEKO</h1>
-          <h2 className="text-center">Ultra 64</h2>
-        </div>
-        <div className="position-relative pb-3">
-          <div className="text-center fs-normal">
-            <p>Income generating NFT collection.</p>
+    <div className="max-w-6xl m-auto">
+      <Nav />
+      <main className="p-4">
+        <section id="intro" className="pt-5">
+          <div className="relative">
+            <img src="images/ultra64-promo.gif" className="img-fluid mx-auto d-block" alt="Neko Logo" />
           </div>
-        </div>
-        <div className="position-relative pb-3">
-          <div className="text-center fs-normal">
-            <b className="text-success fs-large">Auction is live!</b>
-            {/* <b className="text-warning fs-large">Auction is suspended.</b> */}
-            {/* <b className="text-secondary fs-large">Auction will start soon.</b> */}
-            {/* <b className="text-info fs-large">Auction has ended!</b> */}
+          <div className="relative pb-3 mt-16">
+            <h1 className="text-center text-4xl">NEKO</h1>
+            <h2 className="text-center">Ultra 64</h2>
           </div>
-        </div>
-        <div className="row">
-          <div className="col-3">
-            <div className="inline-block">
-              <h4 className="absolute">RULES</h4>
+          <div className="position-relative pb-3">
+            <div className="text-center fs-normal">
+              <p>Income generating NFT collection.</p>
             </div>
           </div>
-          <div className="position-relative pb-3 fs-normal">
-            <ul>
-              <li>You can buy only one NFT per wallet.</li>
-              <li>You can only have one winning bid at any time.</li>
-              <li>Minimum bid is 3 AVAX</li>
-              <li>Bids can be upped by 0.5, 1 or 2 AVAX</li>
-              <li>Winning bids are binding</li>
-              <li>You can withdraw your AVAX on lost bids at any point</li>
-              <li>You can mint your NEKO once the auction for that set has ended</li>
-            </ul>
+          <div className="relative pb-3">
+            <div className="text-center text-xl">
+              <b className="text-success">Auction is live!</b>
+              {/* <b className="text-warning fs-large">Auction is suspended.</b> */}
+              {/* <b className="text-secondary fs-large">Auction will start soon.</b> */}
+              {/* <b className="text-info fs-large">Auction has ended!</b> */}
+            </div>
           </div>
-        </div>
-        <hr />
-      </section>
-      <section id="live" className="pt-5">
-        <div className="position-relative pb-3">
-          <h2 className="fw-bold text-center text-dark">LIVE</h2>
-        </div>
-        <div className="position-relative pb-3">
-          <div className="text-center fs-normal">
-            <p>These NEKOs are on sale now.</p>
-            <p>Mouseover to place a bid (min 3 AVAX).</p>
-            <p className="fs-large">Set 6/8</p>
+          <div className="md:mx-16">
+            <h4 className="mb-2 text-xl">RULES</h4>
+            <div className="relative mb-16">
+              <ul>
+                <li>You can buy only one NFT per wallet.</li>
+                <li>You can only have one winning bid at any time.</li>
+                <li>Minimum bid is 3 AVAX</li>
+                <li>Bids can be upped by 0.5, 1 or 2 AVAX</li>
+                <li>Winning bids are binding</li>
+                <li>You can withdraw your AVAX on lost bids at any point</li>
+                <li>You can mint your NEKO once the auction for that set has ended</li>
+              </ul>
+            </div>
           </div>
-        </div>
+          <hr />
+        </section>
+        <section id="live" className="pt-5">
+          <div className="position-relative pb-3">
+            <h2 className="fw-bold text-center text-dark">LIVE</h2>
+          </div>
+          <div className="position-relative pb-3">
+            <div className="text-center fs-normal">
+              <p>These NEKOs are on sale now.</p>
+              <p>Mouseover to place a bid (min 3 AVAX).</p>
+              <p className="fs-large">Set 6/8</p>
+            </div>
+          </div>
 
-        <div className="grid grid-cols-2 pt-2 pb-4">
-          {tokensOnSale.map(tokenId => (
-            <TokenOnSale tokenId={tokenId} key={tokenId} />
-          ))}
-        </div>
-        <div id="withdrawFundsBox" className="position-relative pt-3 pb-3 d-none mx-auto">
-          <button onClick={withdraw}
-            className="withdraw btn btn-lg btn-primary mx-auto d-block rounded-pill" type="submit">Withdraw all bids</button>
-          <div className="d-flex justify-content-center">(winning bids won't be withdrawn)</div>
-        </div>
-        {/* hide for now pending connect flow rework
+          <div className="grid grid-cols-1 md:grid-cols-2 pt-2 pb-4">
+            {tokensOnSale.map(tokenId => (
+              <TokenOnSale tokenId={tokenId} key={tokenId} />
+            ))}
+          </div>
+          <div className="relative pt-3 pb-3 d-none mx-auto text-center">
+            <button onClick={withdraw}
+              className="btn-pill rounded-xl mb-2" type="submit">Withdraw all bids</button>
+            <div>(winning bids won't be withdrawn)</div>
+          </div>
+          {/* hide for now pending connect flow rework
 
         <div id="installMetamaskBox1" className="position-relative pt-3 pb-3 d-none alert mx-auto">
           <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
@@ -292,26 +291,26 @@ export default function AuctionPage() {
           <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
         </div>
         */}
-      </section >
-      <hr />
-      <section id="sold" className="pt-5">
-        <div className="position-relative pb-3">
-          <h2 className="fw-bold text-center text-dark">SOLD</h2>
-        </div>
-        <div className="position-relative pb-3">
-          <div className="text-center fs-normal">
-            <p>These NEKOs have been sold.</p>
+        </section >
+        <hr />
+        <section id="sold" className="pt-5">
+          <div className="position-relative pb-3">
+            <h2 className="fw-bold text-center text-dark">SOLD</h2>
           </div>
-        </div>
-        <div className="grid grid-cols-4 sm:grid-cols-8 pt-2 pb-4">
-          {tokensSold.map(tokenId => (
-            <div className="flow flow-col">
-              <img src={`https://arweave.net/${tokenImageHashes[tokenId]}`} />
-              {active && <SoldFor tokenId={tokenId} />}
+          <div className="position-relative pb-3">
+            <div className="text-center fs-normal">
+              <p>These NEKOs have been sold.</p>
             </div>
-          ))}
-        </div>
-        {/* hide for now pending connect flow rework
+          </div>
+          <div className="grid grid-cols-4 sm:grid-cols-8 pt-2 pb-4">
+            {tokensSold.map(tokenId => (
+              <div className="flow flow-col">
+                <img src={`https://arweave.net/${tokenImageHashes[tokenId]}`} />
+                {active && <SoldFor tokenId={tokenId} />}
+              </div>
+            ))}
+          </div>
+          {/* hide for now pending connect flow rework
         <div id="installMetamaskBox2" className="position-relative pt-3 pb-3 d-none alert mx-auto">
           <button className="install btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Install MetaMask</button>
         </div>
@@ -322,7 +321,8 @@ export default function AuctionPage() {
           <button className="switch btn btn-lg btn-danger mx-auto d-block rounded-pill" type="submit">Switch to Avalanche</button>
         </div>
         */}
-      </section >
-    </main >
+        </section >
+      </main >
+    </div>
   )
 }

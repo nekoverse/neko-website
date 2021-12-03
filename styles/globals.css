@@ -29,44 +29,37 @@
     border-top: 1px solid #8c8b8b;
   }
   ul {
-    list-style-type: none;
+    @apply list-none;
   }
   li {
-    padding-left: 1.3em;
-    letter-spacing: 2px;
-    font-size: 20px;
+    @apply pl-8 tracking-wide text-lg md:text-xl;
   }
   li:before {
     content: "+";
-    display: inline-block;
-    margin-left: -2.3em;
-    width: 1.3em;
+    @apply inline-block -ml-5 w-5;
   }
 }
 
 @layer components {
+
+  .btn-pill {
+    @apply bg-red-400 hover:bg-red-500 text-white font-black border border-red-500 py-2 px-3
+  }
+
+  .btn-buy {
+    @apply btn-pill;
+  }
 
   .characters {
     @apply grid grid-cols-1 md:grid-cols-6 gap-2;
   }
 
   .char-name {
-    @apply text-center text-2xl font-bold md:col-span-2;
+    @apply text-center text-xl mt-8 md:mt-0 md:text-2xl font-bold md:col-span-2;
   }
 
   .char-desc {
-    @apply text-2xl md:col-span-3;
-  }
-
-  #buy-button {
-    font-family: "Lulo Clean Bold" !important;
-    font-size: 16px;
-    padding-top: 16px;
-    padding-bottom: 16px;
-  }
-  .img-max {
-    max-width: 100%;
-    max-height: 100%
+    @apply text-lg md:text-2xl md:col-span-3;
   }
 
   .btn-lg {
@@ -78,7 +71,7 @@
   }
 
   .alert-danger {
-    @apply bg-red-200;
+    @apply bg-red-100 text-red-900;
   }
 
   .social-icon {
@@ -90,7 +83,11 @@
   }
 
   .contract-id {
-    @apply mx-4 block overflow-ellipsis overflow-hidden;
+    @apply mx-4 block overflow-ellipsis overflow-hidden text-blue-600 hover:underline hover:text-blue-900;
+  }
+
+  .market-icon {
+    @apply w-14 w-14 md:w-16 md:h-16;
   }
 }
 
@@ -99,60 +96,19 @@
     font-family: "Lulo Clean Bold" !important
   }
   .fs-extra-large {
-    font-size: 96px;
+    @apply text-xl;
   }
   .fs-large {
-    font-size: 48px;
+    @apply text-lg;
   }
   .fs-normal {
-    letter-spacing: 2px;
-    font-size: 24px;
+    @apply text-base;
   }
   .fs-smaller {
-    letter-spacing: 2px;
-    font-size: 20px;
-  }
-  .center {
-    margin-left: auto;
-    margin-right: auto;
-    width: 15em
-  }
-  .nft-display {
-    height: 180px;
-    width: 100%;
-    display: inline-block;
-  }
-  .nft-display-large {
-    height: 270px;
-    width: 100%;
-    display: inline-block;
-  }
-  .nft-display-small {
-    height: 135px;
-    width: 100%;
-    display: inline-block;
-  }
-  .img-profile {
-    height: 180px;
-    width: 180px;
-    display: inline-block;
+    @apply text-sm;
   }
   .action-section {
     @apply max-w-7xl;
   }
-  .left-rounded {
-    border-top-left-radius: 24px !important;
-    border-bottom-left-radius: 24px !important;
-  }
-  .right-rounded {
-    border-top-right-radius: 24px !important;
-    border-bottom-right-radius: 24px !important;
-  }
-  .top-right {
-    inset: 0 0 auto auto;
-  }
-  .no-padding {
-    padding-left: 0;
-    padding-right: 0;
-  }
+
 }
