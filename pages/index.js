@@ -19,6 +19,21 @@ import { formatNekoBillions, injectedConnector, validChainId } from '../lib/evm'
 import { useHasWeb3Provider } from '../components/ProviderDetectorContext'
 import Nav from '../components/Nav'
 
+function addToWallet() {
+  ethereum.request({
+    method: 'wallet_watchAsset',
+    params: {
+      type: 'ERC20', // Initially only supports ERC20, but eventually more!
+      options: {
+        address: "0xD9702F5E3b0eb7452967CB82529776D672bdC03F", // The address that the token is at.
+        symbol: "NEKO", // A ticker symbol or shorthand, up to 5 chars.
+        decimals: "8", // The number of decimals in the token
+        image: "", // A string url of the token logo
+      },
+    },
+  })
+}
+
 function LottoState({ account }) {
   const { neko: nekoAddr, lotto: lottoAddr } = useContractAddresses()
   const { data: lottoState } = useEtherSWR(account ? [
@@ -251,7 +266,10 @@ function Buy() {
                 </div>
                 <div className="text-center fs-smaller mb-6">OR</div>
                 <div className="text-center">
-                  <a id="add-link" href="" className="fs-smaller rounded-xl p-4 bg-gray-200 hover:bg-gray-300 border border-gray-300">Add me to your wallet for later</a>
+                  <button onClick={addToWallet}
+                    className="rounded-xl p-4 bg-gray-200 hover:bg-gray-300 border border-gray-300">
+                    Add me to your wallet for later
+                  </button>
                 </div>
               </div>
             )
