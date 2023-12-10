@@ -105,6 +105,8 @@ li:before {
 }
 .action-section {
 	width: 400px;
+	background-color: #FEFFFE;
+	border-color: #998888;
 }
 .left-rounded {
 	border-top-left-radius: 24px !important;
@@ -120,4 +122,8 @@ li:before {
 .no-padding {
 	padding-left: 0;
 	padding-right: 0;
+}
+.btn {
+	background-color: #E57373;
+	border-color: #EF9A9A;
 }
