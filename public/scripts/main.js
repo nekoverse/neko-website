@@ -443,7 +443,7 @@ function initialize() {
     }  
   });    
 
-  $('#disclaimer-close').click(closeDisclaimer);
+  $('#disclaimer-close > a').click(closeDisclaimer);
 
   $('button.install').click(installMetaMask);
   $('button.switch').click(switchNetwork);
