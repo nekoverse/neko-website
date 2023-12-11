@@ -137,6 +137,7 @@ li:before {
         z-index: 15;
         border-bottom: 1px solid #998888;
         background-color: #FEFFFE;
+	font-size: 1.3em;
 }
 .menu-item {
 	color: #665555

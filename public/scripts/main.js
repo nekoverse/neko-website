@@ -106,6 +106,12 @@ const lottoState = {
 const onboarding = new MetaMaskOnboarding();
 
 
+// Close
+
+function closeDisclaimer() {
+  $(".disclaimer").hide();
+}
+
 //
 // Show/Hide 
 //
@@ -436,6 +442,8 @@ function initialize() {
       showInstallMetaMaskMessage(ACTION_GROUP_2);      
     }  
   });    
+
+  $('#disclaimer-close').click(closeDisclaimer);
 
   $('button.install').click(installMetaMask);
   $('button.switch').click(switchNetwork);
