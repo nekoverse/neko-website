@@ -11,6 +11,12 @@
 * {
   border-radius: 0 !important;
 }
+a {
+	color:#E57373
+}
+a:hover {
+	color:#E57373
+}
 header {
 	background-color: #F9F9F9;
 	font-family: "Avenir Light" !important
@@ -134,7 +140,4 @@ li:before {
 }
 .menu-item {
 	color: #665555
-}
-.menu-item:hover {
-	color: #E57373
 }
