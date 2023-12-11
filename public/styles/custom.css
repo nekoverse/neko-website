@@ -132,3 +132,6 @@ li:before {
         border-bottom: 1px solid #998888;
         background-color: #FEFFFE;
 }
+.menu-item {
+	color: #998888
+}
