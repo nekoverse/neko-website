@@ -133,6 +133,9 @@ li:before {
 	background-color: #E57373;
 	border-color: #EF9A9A;
 }
+.btn:hover {
+	background-color: #998888;
+}
 .disclaimer {
         z-index: 15;
         border-bottom: 1px solid #998888;
