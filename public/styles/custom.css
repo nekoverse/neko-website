@@ -146,9 +146,4 @@ li:before {
 .menu-item {
 	color: #665555
 }
-.footer-container {
-	display: flex;
-}
-.footer-item {
-	flex: 1;
-}
+
