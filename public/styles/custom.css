@@ -147,8 +147,8 @@ li:before {
 	color: #665555
 }
 .footer-container {
-	display:flex;
+	display: flex;
 }
 .footer-item {
-	flex:1
+	flex: 1;
 }
